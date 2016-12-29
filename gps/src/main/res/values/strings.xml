@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">GPS</string>
+
+    <string name="permisson_rejected">当前应用缺少必要权限，该功能暂时无法使用。如若需要，请单击【确定】按钮前往设置中心进行权限授权。</string>
+    <string name="confirm">确定</string>
+    <string name="cancel">取消</string>
+    <string name="run">跑步</string>
+
+    <string name="gps_sinal_strong">GPS信号强</string>
+    <string name="gps_sinal_normal">GPS信号一般</string>
+    <string name="gps_sinal_weak">GPS信号弱</string>
+    <string name="gps_sinal_none">无GPS信号</string>
+    <string name="gps_sinal_searching">GPS信号搜索中</string>
+
+    <string name="kilometers">公里</string>
+    <string name="duration">耗时</string>
+    <string name="avg_pace">平均配速</string>
+
+</resources>

@@ -1,0 +1,167 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_sport_bg"
+    tools:context="com.codoon.clubgps.ui.fragment.MapFragment">
+
+    <ImageView
+        android:id="@+id/open_map_iv"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_margin="10dp"
+        android:src="@mipmap/ic_small_map"/>
+
+    <ImageView
+        android:id="@+id/gps_sinal_iv"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_alignLeft="@id/open_map_iv"
+        android:layout_alignTop="@id/open_map_iv"
+        android:layout_alignRight="@id/open_map_iv"
+        android:layout_alignBottom="@id/open_map_iv"
+        android:layout_margin="14dp"
+        android:src="@mipmap/ic_gps_lost"/>
+
+    <TextView
+        android:id="@+id/gps_sinal_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/open_map_iv"
+        android:layout_alignBottom="@id/open_map_iv"
+        android:layout_toRightOf="@id/open_map_iv"/>
+
+    <TextView
+        android:text="@string/run"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:layout_alignTop="@id/open_map_iv"
+        android:layout_alignBottom="@id/open_map_iv"
+        android:textSize="18sp"
+        android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/distance_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="100sp"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="70dp"
+        android:text="0.73"
+        android:layout_below="@+id/open_map_iv"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:id="@+id/tv0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/distance_tv"
+        android:layout_centerHorizontal="true"
+        android:textColor="#79798e"
+        android:text="@string/kilometers"/>
+
+    <LinearLayout
+        android:id="@+id/data_ly"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv0"
+        android:layout_marginTop="40dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="18dp">
+
+            <TextView
+                android:id="@+id/duration_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:textSize="40sp"
+                android:text="00:00:00"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#79798e"
+                android:textSize="12sp"
+                android:text="@string/duration"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="1px"
+            android:layout_height="50dp"
+            android:background="#ffffff"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="18dp">
+
+            <TextView
+                android:id="@+id/avg_pace_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:textSize="40sp"
+                android:text="0'0''"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#79798e"
+                android:textSize="12sp"
+                android:text="@string/avg_pace"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_below="@id/data_ly"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/pause_iv"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_sport_pause"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="horizontal">
+            <ImageView
+                android:id="@+id/resume_iv"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:alpha="0"
+                android:src="@drawable/ic_sport_resume"/>
+            <ImageView
+                android:id="@+id/stop_iv"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginLeft="50dp"
+                android:alpha="0"
+                android:src="@drawable/ic_sport_stop"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>
