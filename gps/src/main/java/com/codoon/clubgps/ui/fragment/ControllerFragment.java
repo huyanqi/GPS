@@ -9,9 +9,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.codoon.clubgps.R;
+import com.codoon.clubgps.bean.GPSPoint;
 import com.codoon.clubgps.ui.GPSControllerActivity;
 import com.codoon.clubgps.util.AnimUtil;
+import com.codoon.clubgps.util.CommonUtil;
 import com.codoon.clubgps.util.GPSSignal;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by Frankie on 2016/12/27.
@@ -24,10 +29,18 @@ public class ControllerFragment extends Fragment implements View.OnClickListener
     private ImageView openMapIv;
     private ImageView gpsSignalIv;
     private TextView gpsSignalTv;
+    private Timer mRunTimeTimer;
 
     private ImageView pauseIv;
     private ImageView resumeIv;
     private ImageView stopIv;
+
+    private TextView distanceTv;
+    private TextView durationTv;
+    private TextView avgPaceTv;
+
+    private int runTime = 0;//跑步耗时
+    private double runDistance = 0;//跑步距离
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,6 +51,7 @@ public class ControllerFragment extends Fragment implements View.OnClickListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_controller, container, false);
         init();
+        initTimer();
         sportResume();
         return rootView;
     }
@@ -52,11 +66,44 @@ public class ControllerFragment extends Fragment implements View.OnClickListener
         resumeIv = (ImageView) rootView.findViewById(R.id.resume_iv);
         stopIv = (ImageView) rootView.findViewById(R.id.stop_iv);
 
+        distanceTv = (TextView) rootView.findViewById(R.id.distance_tv);
+        durationTv = (TextView) rootView.findViewById(R.id.duration_tv);
+        avgPaceTv = (TextView) rootView.findViewById(R.id.avg_pace_tv);
+
         openMapIv.setOnClickListener(this);
         pauseIv.setOnClickListener(this);
         resumeIv.setOnClickListener(this);
         stopIv.setOnClickListener(this);
     }
+
+    /**
+     * 更新运动数据
+     */
+    public void updateSportData(GPSPoint gpsPoint){
+        runDistance += gpsPoint.getDistance();
+        distanceTv.setText(CommonUtil.format2(runDistance / 1000));
+        avgPaceTv.setText(CommonUtil.getPaceTimeStr(gpsPoint.getPace()));//(long) gpsPoint.getPace())
+    }
+
+    private void initTimer(){
+        mRunTimeTimer = new Timer();
+        mRunTimeTimer.schedule(mRunTimeTask, 1000, 1000);
+    }
+
+    private TimerTask mRunTimeTask = new TimerTask() {
+        @Override
+        public void run() {
+            if(mControllerActivity.isRunning()){
+                rootView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        runTime ++;
+                        durationTv.setText(CommonUtil.getPeriodTime(runTime));
+                    }
+                });
+            }
+        }
+    };
 
     @Override
     public void onClick(View v) {
@@ -128,4 +175,10 @@ public class ControllerFragment extends Fragment implements View.OnClickListener
         }
     }
 
+    @Override
+    public void onDestroy() {
+        mRunTimeTimer.cancel();
+        mRunTimeTask.cancel();
+        super.onDestroy();
+    }
 }

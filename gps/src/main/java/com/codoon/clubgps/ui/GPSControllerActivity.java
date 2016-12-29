@@ -73,6 +73,7 @@ public class GPSControllerActivity extends AppCompatActivity implements GPSServi
     @Override
     public void onGPSLocationChanged(GPSPoint newGpsPoint) {
         mMapFragment.onNewPoint(newGpsPoint);
+        mControllerFragment.updateSportData(newGpsPoint);
     }
 
     @Override

@@ -3,8 +3,11 @@ package com.codoon.clubgps.util;
 import android.content.Context;
 import android.util.DisplayMetrics;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+
 /**
- * Created by Frankie on 2016/12/27.
+ * Created by huan on 15/5/27.
  */
 
 public class CommonUtil {
@@ -53,6 +56,72 @@ public class CommonUtil {
         }
         float scale = getDisplayMetrics(context).density;
         return (int) (dipValue * scale + 0.5f);
+    }
+
+    /**
+     * 获取00:00:00格式的时间
+     *
+     * @param time ：单位:秒
+     * @return
+     */
+    public static String getPeriodTime(long time) {//88
+        StringBuilder sb = new StringBuilder();
+        int hour = (int) (time / (60 * 60));
+        int min = (int) (time % (60 * 60)) / (60);//1
+        int sec = (int) (time % (60));  //28
+
+        if (hour < 10) {
+            sb.append("0" + hour + ":");
+        } else {
+            sb.append(hour + ":");
+        }
+        if (min < 10) {
+            sb.append("0" + min + ":");
+        } else {
+            sb.append(min + ":");
+        }
+        if (sec < 10) {
+            sb.append("0" + sec);
+        } else {
+            sb.append(sec + "");
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 使用DecimalFormat,保留小数点后两位
+     */
+    public static String format2(double value) {
+        DecimalFormat df = new DecimalFormat("0.00");
+        df.setRoundingMode(RoundingMode.HALF_UP);
+        return df.format(value);
+    }
+
+    /**
+     * 平均配速转换
+     *
+     * @param time 单位:秒
+     * @return
+     */
+    public static String getPaceTimeStr(long time) {
+        int min = (int) (time / 60);
+        int second = (int) (time % 60);
+        String tmp = "";
+        if (min < 10) {
+            tmp += "0" + min;
+        } else {
+            tmp += String.valueOf(min);
+        }
+        tmp += "'";
+        if (second < 10) {
+            tmp += "0" + second;
+
+        } else
+            tmp += String.valueOf(second);
+        tmp += "\"";
+        return tmp;
+
+
     }
 
 }

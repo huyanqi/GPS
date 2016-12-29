@@ -48,6 +48,7 @@ public class MapFragment extends com.amap.api.maps2d.MapFragment implements View
     private Marker myPosintMarker;//我的坐标标记
     private int lineColor;
     private Timer mMapAutoMoveTimer;
+
     private long lastMoveCenterTime = System.currentTimeMillis();
     private LatLng lastGPSPoint;//最后一次打的点
 
@@ -138,10 +139,10 @@ public class MapFragment extends com.amap.api.maps2d.MapFragment implements View
         public void run() {
             if(rootView.getVisibility() == View.VISIBLE){
                 if(System.currentTimeMillis() - lastMoveCenterTime > Constant.MAP_AUTOMOVE_TIME){
+                    if(!mControllerActivity.isRunning() || mControllerActivity.isSearchingGPS()) return;
                     rootView.post(new Runnable() {
                         @Override
                         public void run() {
-                            if(!mControllerActivity.isRunning() || mControllerActivity.isSearchingGPS()) return;
                             mapMoveToMyLocation();
                         }
                     });
@@ -270,6 +271,9 @@ public class MapFragment extends com.amap.api.maps2d.MapFragment implements View
 
     @Override
     public void onDestroy() {
+        mMapAutoMoveTask.cancel();
+        mMapAutoMoveTimer.cancel();
+
         Logger.i("退出地图，一共打点 "+ mGPSPoints.size()+" 个");
         super.onDestroy();
     }

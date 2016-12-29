@@ -19,6 +19,7 @@ public class GPSPoint {
     private double longitude;//经度
 
     private double distance;//距离上一个坐标点的距离,单位:m
+    private long pace;//当前配速
 
     private long timestamp;//坐标产生的时间
     private int index;//本次跑步产生的第几个点
@@ -39,7 +40,12 @@ public class GPSPoint {
         this.longitude = lng;
         timestamp = new Date().getTime();
         if(lastGPSPoint != null){
+            //离上一个点的距离,单位m
             distance = GPSUtil.computeDistanceBetween(new LatLng(lat, lng), new LatLng(lastGPSPoint.latitude, lastGPSPoint.longitude));
+            //离上一个点的时间,单位s
+            long duration = (timestamp - lastGPSPoint.getTimestamp()) / 1000;
+            //计算配速
+            pace = (1000 / Math.round(distance)) * duration;
             index = lastGPSPoint.getIndex();//临时将点标记为上一个坐标的点，如果是有效点，则+1
         }
         latLng = new LatLng(lat, lng);
@@ -78,10 +84,15 @@ public class GPSPoint {
         this.is_running = is_running;
     }
 
+    public long getPace() {
+        return pace;
+    }
+
     @Override
     public String toString() {
         return "GPSPoint{" +
-                " distance=" + distance +
+                "distance=" + distance +
+                ", pace=" + pace +
                 ", index=" + index +
                 ", is_running=" + is_running +
                 '}';
