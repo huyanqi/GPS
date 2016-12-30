@@ -2,6 +2,7 @@ package com.codoon.clubgps.ui;
 
 import android.app.FragmentTransaction;
 import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
@@ -9,12 +10,14 @@ import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 
+import com.amap.api.maps2d.model.LatLng;
 import com.codoon.clubgps.R;
 import com.codoon.clubgps.bean.GPSPoint;
 import com.codoon.clubgps.service.GPSService;
 import com.codoon.clubgps.ui.fragment.ControllerFragment;
 import com.codoon.clubgps.ui.fragment.MapFragment;
 import com.codoon.clubgps.util.Constant;
+import com.codoon.clubgps.util.DialogUtil;
 import com.codoon.clubgps.util.GPSSignal;
 import com.codoon.clubgps.util.PermissionUtils;
 
@@ -67,7 +70,15 @@ public class GPSControllerActivity extends AppCompatActivity implements GPSServi
      * 运动结束
      */
     public void sportStop(){
-
+        new DialogUtil(this).createAlertDialog(getString(R.string.alert_run_finish), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        }, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {}
+        }).show();
     }
 
     @Override
@@ -79,6 +90,7 @@ public class GPSControllerActivity extends AppCompatActivity implements GPSServi
     @Override
     public void onFirstGPSLocation(GPSPoint newGPSPoint) {
         mMapFragment.onFirstLocationSuccess(newGPSPoint);
+        mControllerFragment.onFirstLocationSuccess();
     }
 
     @Override
@@ -88,8 +100,8 @@ public class GPSControllerActivity extends AppCompatActivity implements GPSServi
     }
 
     @Override
-    public void onlyShowNoLogic(GPSPoint gpsPoint) {
-        mMapFragment.onlyShowNoLogic(gpsPoint);
+    public void onlyShowNoLogic(LatLng latLng) {
+        mMapFragment.onlyShowNoLogic(latLng);
     }
 
     private ServiceConnection gpsServiceConnection = new ServiceConnection() {
@@ -173,6 +185,17 @@ public class GPSControllerActivity extends AppCompatActivity implements GPSServi
     protected void onDestroy() {
         super.onDestroy();
         unbindService(gpsServiceConnection);
+        mGPSService.stopSelf();
+    }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        switchFragment();
+    }
+
+    public void fakeSignal(int accuracy) {
+        mGPSService.fakeSignal(accuracy);
     }
 
 }

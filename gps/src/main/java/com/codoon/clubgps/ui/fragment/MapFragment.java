@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.amap.api.maps2d.AMap;
 import com.amap.api.maps2d.CameraUpdate;
@@ -16,6 +17,7 @@ import com.amap.api.maps2d.model.LatLng;
 import com.amap.api.maps2d.model.LatLngBounds;
 import com.amap.api.maps2d.model.Marker;
 import com.amap.api.maps2d.model.MarkerOptions;
+import com.amap.api.maps2d.model.Polyline;
 import com.amap.api.maps2d.model.PolylineOptions;
 import com.codoon.clubgps.R;
 import com.codoon.clubgps.application.GPSApplication;
@@ -26,6 +28,7 @@ import com.codoon.clubgps.util.CacheUtil;
 import com.codoon.clubgps.util.CommonUtil;
 import com.codoon.clubgps.util.Constant;
 import com.codoon.clubgps.util.GPSSignal;
+import com.codoon.clubgps.util.LogUtil;
 import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
@@ -39,9 +42,12 @@ import java.util.TimerTask;
 
 public class MapFragment extends com.amap.api.maps2d.MapFragment implements View.OnClickListener, AMap.OnMapLoadedListener {
 
+    private final String TAG = "MapFragment";
+
     private View rootView;
     private GPSControllerActivity mControllerActivity;
     private AMap mAMap;
+    private TextView gpsNoSignalTipsTv;
     private List<GPSPoint> mGPSPoints;//已经绘制过的gps坐标点
     private double mCurrentLat, mCurrentLng;
     private CacheUtil mCacheUtil;
@@ -70,6 +76,9 @@ public class MapFragment extends com.amap.api.maps2d.MapFragment implements View
         }
     }
 
+    /**
+     * 第一次定位成功，开始跑步
+     */
     public void onFirstLocationSuccess(GPSPoint newGPSPoint){
         addNewGPSPoint(newGPSPoint);
 
@@ -80,10 +89,30 @@ public class MapFragment extends com.amap.api.maps2d.MapFragment implements View
         moveToMyLocation();
 
         lastGPSPoint = newGPSPoint.getLatLng();
+
     }
 
     public void onGPSSignalChanged(GPSSignal gpsSignal){
+        gpsNoSignalTipsTv.setVisibility(View.INVISIBLE);
+        if(gpsSignal.getSignal() == GPSSignal.Signal.STRONG) {
+            //信号强
 
+        }else if(gpsSignal.getSignal() == GPSSignal.Signal.NORMAL) {
+            //信号一般
+
+        }else if(gpsSignal.getSignal() == GPSSignal.Signal.WEAK) {
+            //信号弱
+            gpsNoSignalTipsTv.setVisibility(View.VISIBLE);
+            gpsNoSignalTipsTv.setText(R.string.gps_weak_signal_tips);
+        }else if(gpsSignal.getSignal() == GPSSignal.Signal.NONE) {
+            //无信号
+            gpsNoSignalTipsTv.setVisibility(View.VISIBLE);
+            gpsNoSignalTipsTv.setText(R.string.gps_no_signal_tips);
+        }else if(gpsSignal.getSignal() == GPSSignal.Signal.SEARCHING) {
+            //信号搜索中
+            gpsNoSignalTipsTv.setVisibility(View.VISIBLE);
+            gpsNoSignalTipsTv.setText(R.string.gps_searching_signal_tips);
+        }
     }
 
     /**
@@ -120,7 +149,11 @@ public class MapFragment extends com.amap.api.maps2d.MapFragment implements View
         screenWidth = CommonUtil.getScreenWidth(GPSApplication.getAppContext());
         screenHeight = CommonUtil.getScreenHeight(GPSApplication.getAppContext());
 
+        gpsNoSignalTipsTv = (TextView) rootView.findViewById(R.id.gps_no_signal_tips);
+
         rootView.findViewById(R.id.close_btn).setOnClickListener(this);
+        rootView.findViewById(R.id.fake_signal_weak).setOnClickListener(this);
+        rootView.findViewById(R.id.fake_signal_strong).setOnClickListener(this);
     }
 
     private void initMap(){
@@ -155,6 +188,10 @@ public class MapFragment extends com.amap.api.maps2d.MapFragment implements View
     public void onClick(View v) {
         if (v.getId() == R.id.close_btn) {
             mControllerActivity.switchFragment();
+        }else if(v.getId() == R.id.fake_signal_weak){
+            mControllerActivity.fakeSignal(500);
+        }else if(v.getId() == R.id.fake_signal_strong){
+            mControllerActivity.fakeSignal(10);
         }
     }
 
@@ -210,7 +247,11 @@ public class MapFragment extends com.amap.api.maps2d.MapFragment implements View
     }
 
     private void drawLine(LatLng endPoint){
-        mAMap.addPolyline(new PolylineOptions().add(lastGPSPoint).add(endPoint).color(lineColor));
+        LogUtil.i(TAG, "画线:"+lastGPSPoint+"-"+endPoint);
+        Polyline polyline = mAMap.addPolyline(new PolylineOptions().add(lastGPSPoint).add(endPoint).geodesic(true).width(16).color(lineColor));
+        //如果打点异常，放弃本次打点
+        if(polyline == null) return;
+        //mAMap.addCircle(new CircleOptions().center(endPoint).radius(mAMap.getScalePerPixel() * 16).fillColor(lineColor).strokeColor(Color.argb(1,0,0,0)));
         lastGPSPoint = endPoint;
     }
 
@@ -253,8 +294,7 @@ public class MapFragment extends com.amap.api.maps2d.MapFragment implements View
     /**
      * 显示我的高精度值的位置，不做任何逻辑操作
      */
-    public void onlyShowNoLogic(GPSPoint gpsPoint){
-        LatLng myLatLng = gpsPoint.getLatLng();
+    public void onlyShowNoLogic(LatLng myLatLng){
         CameraPosition myPosition = new CameraPosition(myLatLng, 17, 0, 0);
         mAMap.animateCamera(CameraUpdateFactory.newCameraPosition(myPosition), 500, null);
         markMyPoint(myLatLng);
@@ -271,6 +311,7 @@ public class MapFragment extends com.amap.api.maps2d.MapFragment implements View
 
     @Override
     public void onDestroy() {
+
         mMapAutoMoveTask.cancel();
         mMapAutoMoveTimer.cancel();
 

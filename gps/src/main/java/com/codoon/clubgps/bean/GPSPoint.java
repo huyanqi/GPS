@@ -1,7 +1,8 @@
 package com.codoon.clubgps.bean;
 
+import com.amap.api.maps2d.AMapUtils;
 import com.amap.api.maps2d.model.LatLng;
-import com.codoon.clubgps.util.GPSUtil;
+import com.codoon.clubgps.util.LogUtil;
 
 import java.util.Date;
 
@@ -15,16 +16,20 @@ import java.util.Date;
 
 public class GPSPoint {
 
+    private static final String TAG = "GPSPoint";
+
     private double latitude;//纬度
     private double longitude;//经度
 
     private double distance;//距离上一个坐标点的距离,单位:m
-    private long pace;//当前配速
+    private long pace;//当前配速,单位:s
 
     private long timestamp;//坐标产生的时间
     private int index;//本次跑步产生的第几个点
 
     private boolean is_running;//正在跑步中(非暂停)
+
+    private boolean is_valid = true;//是否为有效的点
 
     private LatLng latLng;
 
@@ -38,18 +43,40 @@ public class GPSPoint {
     public GPSPoint(double lat, double lng, GPSPoint lastGPSPoint, boolean isRunning){
         this.latitude = lat;
         this.longitude = lng;
+        this.is_running = isRunning;
+        latLng = new LatLng(lat, lng);
         timestamp = new Date().getTime();
+
         if(lastGPSPoint != null){
-            //离上一个点的距离,单位m
-            distance = GPSUtil.computeDistanceBetween(new LatLng(lat, lng), new LatLng(lastGPSPoint.latitude, lastGPSPoint.longitude));
+            //计算离上一个点的距离,单位m
+            distance = AMapUtils.calculateLineDistance(new LatLng(lat, lng), new LatLng(lastGPSPoint.latitude, lastGPSPoint.longitude));
+            index = lastGPSPoint.getIndex();//临时将点标记为上一个坐标的点，如果是有效点，则+1
+            checkValid(lastGPSPoint);//验证点是否有效
+            LogUtil.i(TAG, "验证结果:"+is_valid);
+
             //离上一个点的时间,单位s
             long duration = (timestamp - lastGPSPoint.getTimestamp()) / 1000;
-            //计算配速
-            pace = (1000 / Math.round(distance)) * duration;
-            index = lastGPSPoint.getIndex();//临时将点标记为上一个坐标的点，如果是有效点，则+1
+
+            if(is_valid){
+                index++;
+                //计算配速
+                LogUtil.i(TAG, "distance="+distance+",计算配速:1000/"+Math.round(distance)+"*"+duration);
+                pace = (long) ((1000d / distance) * duration);
+
+            }
+
         }
-        latLng = new LatLng(lat, lng);
-        this.is_running = isRunning;
+
+    }
+
+    private void checkValid(GPSPoint lastGPSPoint) {
+        LogUtil.i(TAG, "开始验证有效性");
+        if (distance < 1) {
+            LogUtil.i(TAG, "放弃本次坐标点,原因:距离=" + distance + "m");
+            is_valid = false;
+            return;
+        }
+
     }
 
     public double getLatitude() {
@@ -86,6 +113,10 @@ public class GPSPoint {
 
     public long getPace() {
         return pace;
+    }
+
+    public boolean is_valid() {
+        return is_valid;
     }
 
     @Override

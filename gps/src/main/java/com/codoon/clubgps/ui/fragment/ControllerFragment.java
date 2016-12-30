@@ -41,6 +41,7 @@ public class ControllerFragment extends Fragment implements View.OnClickListener
 
     private int runTime = 0;//跑步耗时
     private double runDistance = 0;//跑步距离
+    private long avgPace = 0;//当前平均配速
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,7 +52,6 @@ public class ControllerFragment extends Fragment implements View.OnClickListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_controller, container, false);
         init();
-        initTimer();
         sportResume();
         return rootView;
     }
@@ -82,7 +82,14 @@ public class ControllerFragment extends Fragment implements View.OnClickListener
     public void updateSportData(GPSPoint gpsPoint){
         runDistance += gpsPoint.getDistance();
         distanceTv.setText(CommonUtil.format2(runDistance / 1000));
-        avgPaceTv.setText(CommonUtil.getPaceTimeStr(gpsPoint.getPace()));//(long) gpsPoint.getPace())
+        avgPaceTv.setText(CommonUtil.getPaceTimeStr( (avgPace += gpsPoint.getPace()) / 2 ));//(当前平均配速+本次配速) /2
+    }
+
+    /**
+     * 第一次定位成功，开始跑步
+     */
+    public void onFirstLocationSuccess() {
+        initTimer();
     }
 
     private void initTimer(){
@@ -157,7 +164,9 @@ public class ControllerFragment extends Fragment implements View.OnClickListener
         }else if(gpsSignal.getSignal() == GPSSignal.Signal.NORMAL) {
             //信号一般
             gpsSignalIv.setImageResource(R.mipmap.ic_gps_normal);
-            gpsSignalTv.setVisibility(View.INVISIBLE);
+            gpsSignalTv.setVisibility(View.VISIBLE);
+            gpsSignalTv.setTextColor(0xFFffb53f);
+            gpsSignalTv.setText(R.string.gps_sinal_normal);
         }else if(gpsSignal.getSignal() == GPSSignal.Signal.WEAK) {
             //信号弱
             gpsSignalIv.setImageResource(R.mipmap.ic_gps_weak);
@@ -168,17 +177,28 @@ public class ControllerFragment extends Fragment implements View.OnClickListener
             //无信号
             gpsSignalIv.setImageResource(R.mipmap.ic_gps_lost);
             gpsSignalTv.setVisibility(View.VISIBLE);
+            gpsSignalTv.setTextColor(0xFFb1b1b1);
+            gpsSignalTv.setText(R.string.gps_sinal_none);
         }else if(gpsSignal.getSignal() == GPSSignal.Signal.SEARCHING) {
             //信号搜索中
             gpsSignalIv.setImageResource(R.mipmap.ic_gps_lost);
             gpsSignalTv.setVisibility(View.VISIBLE);
+            gpsSignalTv.setTextColor(0xFFb1b1b1);
+            gpsSignalTv.setText(R.string.gps_sinal_searching);
         }
     }
 
     @Override
     public void onDestroy() {
-        mRunTimeTimer.cancel();
-        mRunTimeTask.cancel();
+        if(mRunTimeTimer != null) {
+            mRunTimeTimer.cancel();
+            mRunTimeTimer = null;
+        }
+        if(mRunTimeTask != null){
+            mRunTimeTask.cancel();
+            mRunTimeTask = null;
+        }
         super.onDestroy();
     }
+
 }

@@ -31,6 +31,10 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/open_map_iv"
         android:layout_alignBottom="@id/open_map_iv"
+        android:gravity="center"
+        android:textSize="12sp"
+        android:text="@string/gps_sinal_searching"
+        android:textColor="#b1b1b1"
         android:layout_toRightOf="@id/open_map_iv"/>
 
     <TextView

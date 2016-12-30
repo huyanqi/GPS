@@ -13,6 +13,7 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.amap.api.maps2d.model.LatLng;
 import com.codoon.clubgps.application.GPSApplication;
 import com.codoon.clubgps.bean.GPSPoint;
 import com.codoon.clubgps.util.GPSSignal;
@@ -35,8 +36,9 @@ public class GPSService extends Service implements AMapLocationListener {
     private AMapLocationClient mMapLocationClient;
     private OnGPSLocationChangedListener mOnGPSLocationChangedListener;
 
-    private boolean isRunning = true;//是否正在跑步中
-    private boolean isSearchingGPS = true;
+    private boolean isRunning = true;//是否正在跑步中(非暂停状态)
+    private boolean isSearchingGPS = true;//GPS信号搜索中
+    private boolean runningStarted = false;
 
     private GPSPoint lastGPSPoint;//记录最后一个GPS坐标点
 
@@ -46,28 +48,54 @@ public class GPSService extends Service implements AMapLocationListener {
         if (mOnGPSLocationChangedListener == null) return;
         if (aMapLocation.getErrorCode() == 0) {
             //定位成功
+            LogUtil.i(TAG, "---------------------------------------------------------");
             LogUtil.i(TAG, "获取到新的GPS坐标点:" + aMapLocation.getLatitude() + "," + aMapLocation.getLongitude() + ",精度:" + aMapLocation.getAccuracy());
+
+            if(fakeAccuracy != 0){
+                aMapLocation.setAccuracy(fakeAccuracy);
+            }
+
             mOnGPSLocationChangedListener.onAccuracyChanged(new GPSSignal(aMapLocation.getAccuracy()));
-            GPSPoint gpsPoint = isValid(aMapLocation);
 
-            if (gpsPoint == null) return;//无效的点
+            //1.检查精度
+            float accuracy = aMapLocation.getAccuracy();//获取定位精度，单位:m
+            if (accuracy > 200) {
+                LogUtil.i(TAG, "放弃本次坐标点,原因:精度=" + accuracy + "m");
+                isSearchingGPS = true;
+                if(mOnGPSLocationChangedListener != null){
+                    mOnGPSLocationChangedListener.onlyShowNoLogic(new LatLng(aMapLocation.getLatitude(), aMapLocation.getLongitude()));
+                }
+                return;
+            }
+            isSearchingGPS = false;
 
-            LogUtil.i(TAG, "有效的点:" + gpsPoint + ",lastgpspoint:" + lastGPSPoint);
+            //2.获取GPSPoint对象
+            GPSPoint gpsPoint = new GPSPoint(aMapLocation.getLatitude(), aMapLocation.getLongitude(), lastGPSPoint, isRunning);
 
+            //3.如果点是无效的，放弃该点
+            if (!gpsPoint.is_valid()) return;//无效的点
+
+            //4.如果跑步暂停，则只显示当前坐标位置，不做其他逻辑处理
             if(!isRunning){
                 LogUtil.i(TAG, "运动暂停中.不记录,但是只在界面中显示");
-                mOnGPSLocationChangedListener.onlyShowNoLogic(gpsPoint);
+                mOnGPSLocationChangedListener.onlyShowNoLogic(gpsPoint.getLatLng());
                 return;
             }
 
-            if (lastGPSPoint == null) {
+            //5.将该点数据展示到界面里
+            if (!runningStarted) {
+                //跑步开始
+                runningStarted = true;
                 mOnGPSLocationChangedListener.onFirstGPSLocation(gpsPoint);
+                LogUtil.i(TAG, "这是一个起点");
             } else {
                 mOnGPSLocationChangedListener.onGPSLocationChanged(gpsPoint);
+                LogUtil.i(TAG, "这是一个路线点");
             }
+
             lastGPSPoint = gpsPoint;
         } else {
-            LogUtil.i(TAG, "定位失败,错误码" + aMapLocation.getErrorCode() + ":" + aMapLocation.getErrorInfo());
+            mOnGPSLocationChangedListener.onAccuracyChanged(new GPSSignal(-1));
         }
 
     }
@@ -82,33 +110,9 @@ public class GPSService extends Service implements AMapLocationListener {
 
     }
 
-    private GPSPoint isValid(AMapLocation aMapLocation) {
-        GPSPoint gpsPoint = new GPSPoint(aMapLocation.getLatitude(), aMapLocation.getLongitude(), lastGPSPoint, isRunning);
-
-        float accuracy = aMapLocation.getAccuracy();//获取定位精度，单位:m
-        if (accuracy > 200) {
-            LogUtil.i(TAG, "放弃本次坐标点,精度太低,精度:" + accuracy + "m");
-            isSearchingGPS = true;
-            if(mOnGPSLocationChangedListener != null){
-                mOnGPSLocationChangedListener.onlyShowNoLogic(gpsPoint);
-            }
-            return null;
-        }
-
-        isSearchingGPS = false;
-
-        if (lastGPSPoint != null && gpsPoint.getDistance() < 1) {
-            LogUtil.i(TAG, "放弃本次坐标点,距离太短,距离:" + gpsPoint.getDistance() + "m");
-            return null;
-        }
-
-        if (lastGPSPoint != null && (gpsPoint.getLatitude() == lastGPSPoint.getLatitude() && gpsPoint.getLongitude() == lastGPSPoint.getLongitude())) {
-            LogUtil.i(TAG, "放弃本次坐标点,重复点");
-            return null;
-        }
-
-        gpsPoint.setIndex(gpsPoint.getIndex()+1);//更新点的索引
-        return gpsPoint;
+    private int fakeAccuracy;
+    public void fakeSignal(int accuracy) {
+        this.fakeAccuracy = accuracy;
     }
 
     public class GPSBinder extends Binder {
@@ -133,7 +137,6 @@ public class GPSService extends Service implements AMapLocationListener {
      * 启动定位
      */
     private void startGPSLocation() {
-
         /*启动高德定位*/
         mMapLocationClient = new AMapLocationClient(GPSApplication.getAppContext());
         mMapLocationClient.setLocationListener(this);
@@ -144,20 +147,28 @@ public class GPSService extends Service implements AMapLocationListener {
         locationOption.setNeedAddress(false);//不需要返回地址信息
         locationOption.setMockEnable(true);//允许模拟位置，可以调用第三方工具模拟GPS
         mMapLocationClient.setLocationOption(locationOption);
-        mMapLocationClient.startLocation();
 
+        startLocation();
+    }
+
+    private void startLocation(){
+        mMapLocationClient.startLocation();
         //startFake();//开启模拟定位
+    }
+
+    private void stopLocation() {
+        mMapLocationClient.stopLocation();
+        if(fakeThread != null && fakeThread.isAlive()){
+            fakeThread.interrupt();
+        }
     }
 
     @Override
     public void onDestroy() {
         Logger.i("销毁GPS定位服务");
-        mMapLocationClient.stopLocation();
+        stopLocation();
         mMapLocationClient.unRegisterLocationListener(this);
         mMapLocationClient.onDestroy();
-        if(fakeThread != null && fakeThread.isAlive()){
-            fakeThread.interrupt();
-        }
         super.onDestroy();
     }
 
@@ -173,7 +184,7 @@ public class GPSService extends Service implements AMapLocationListener {
         void onGPSLocationChanged(GPSPoint newGpsPoint);
         void onFirstGPSLocation(GPSPoint newGPSPoint);//第一次定位成功
         void onAccuracyChanged(GPSSignal gpsSignal);//当gps信号发生变化
-        void onlyShowNoLogic(GPSPoint gpsPoint);//显示我的低精度位置
+        void onlyShowNoLogic(LatLng latLng);//显示我的低精度位置
     }
 
     public void setOnGPSLocationChangedListener(OnGPSLocationChangedListener onGPSLocationChangedListener) {
@@ -213,10 +224,10 @@ public class GPSService extends Service implements AMapLocationListener {
                     while (run) {
                         //Logger.d("假点 "+i);
                         if(i%30 == 0 && i > 0){
-                            Thread.sleep(30 * 1000);
+                            Thread.sleep(3 * 1000);
                         }
-                        la = i * 0.00020;
-                        ln = i * 0.00022;
+                        la = i * 0.00020;//0.00020
+                        ln = i * 0.00022;//0.00022
                         a = Message.obtain();
                         location = new AMapLocation(new Location(LocationManager.GPS_PROVIDER));
                         location.setLatitude(30.5272112352 + la);
