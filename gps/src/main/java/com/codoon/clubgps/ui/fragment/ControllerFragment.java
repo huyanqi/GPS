@@ -86,6 +86,14 @@ public class ControllerFragment extends Fragment implements View.OnClickListener
     }
 
     /**
+     * 更新运动数据
+     */
+    public void updateRunData(String distance, String avgPace){
+        distanceTv.setText(distance);
+        distanceTv.setText(avgPace);
+    }
+
+    /**
      * 第一次定位成功，开始跑步
      */
     public void onFirstLocationSuccess() {

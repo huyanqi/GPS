@@ -2,7 +2,7 @@ package com.codoon.clubgps.util;
 
 import android.content.SharedPreferences;
 
-import com.amap.api.maps2d.model.LatLng;
+import com.amap.api.maps.model.LatLng;
 import com.codoon.clubgps.application.GPSApplication;
 
 /**

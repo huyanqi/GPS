@@ -13,7 +13,7 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
-import com.amap.api.maps2d.model.LatLng;
+import com.amap.api.maps.model.LatLng;
 import com.codoon.clubgps.application.GPSApplication;
 import com.codoon.clubgps.bean.GPSPoint;
 import com.codoon.clubgps.util.GPSSignal;

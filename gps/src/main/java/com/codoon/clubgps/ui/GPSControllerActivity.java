@@ -10,7 +10,7 @@ import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 
-import com.amap.api.maps2d.model.LatLng;
+import com.amap.api.maps.model.LatLng;
 import com.codoon.clubgps.R;
 import com.codoon.clubgps.bean.GPSPoint;
 import com.codoon.clubgps.service.GPSService;
@@ -45,8 +45,8 @@ public class GPSControllerActivity extends AppCompatActivity implements GPSServi
         bindService(gpsServiceIntent, gpsServiceConnection, BIND_AUTO_CREATE);
     }
 
-    private void init() {
-        initFragment();
+    private void init(Bundle savedInstanceState) {
+        initFragment(savedInstanceState);
         bindGPSService();
     }
 
@@ -127,11 +127,11 @@ public class GPSControllerActivity extends AppCompatActivity implements GPSServi
             permissionUtils.requestPermissions(Constant.mustPermissions, 1024);
         }else{
             //已授权
-            init();
+            init(savedInstanceState);
         }
     }
 
-    private void initFragment() {
+    private void initFragment(Bundle savedInstanceState) {
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         fragmentTransaction = fragmentTransaction.add(R.id.controller_fragment, mControllerFragment = new ControllerFragment());
         fragmentTransaction = fragmentTransaction.add(R.id.map_fragment, mMapFragment = new MapFragment());
@@ -157,7 +157,7 @@ public class GPSControllerActivity extends AppCompatActivity implements GPSServi
     private void permissionResult(){
         if(permissionUtils.checkPermissions(Constant.mustPermissions)){
             // Permission Granted
-            init();
+            init(null);
         }else{
             permissionUtils.showTips(1025);
         }

@@ -8,17 +8,17 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.amap.api.maps2d.AMap;
-import com.amap.api.maps2d.CameraUpdate;
-import com.amap.api.maps2d.CameraUpdateFactory;
-import com.amap.api.maps2d.model.BitmapDescriptorFactory;
-import com.amap.api.maps2d.model.CameraPosition;
-import com.amap.api.maps2d.model.LatLng;
-import com.amap.api.maps2d.model.LatLngBounds;
-import com.amap.api.maps2d.model.Marker;
-import com.amap.api.maps2d.model.MarkerOptions;
-import com.amap.api.maps2d.model.Polyline;
-import com.amap.api.maps2d.model.PolylineOptions;
+import com.amap.api.maps.AMap;
+import com.amap.api.maps.CameraUpdate;
+import com.amap.api.maps.CameraUpdateFactory;
+import com.amap.api.maps.model.BitmapDescriptorFactory;
+import com.amap.api.maps.model.CameraPosition;
+import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.LatLngBounds;
+import com.amap.api.maps.model.Marker;
+import com.amap.api.maps.model.MarkerOptions;
+import com.amap.api.maps.model.Polyline;
+import com.amap.api.maps.model.PolylineOptions;
 import com.codoon.clubgps.R;
 import com.codoon.clubgps.application.GPSApplication;
 import com.codoon.clubgps.bean.GPSPoint;
@@ -40,7 +40,7 @@ import java.util.TimerTask;
  * Created by Frankie on 2016/12/27.
  */
 
-public class MapFragment extends com.amap.api.maps2d.MapFragment implements View.OnClickListener, AMap.OnMapLoadedListener {
+public class MapFragment extends com.amap.api.maps.MapFragment implements View.OnClickListener, AMap.OnMapLoadedListener {
 
     private final String TAG = "MapFragment";
 
@@ -163,6 +163,7 @@ public class MapFragment extends com.amap.api.maps2d.MapFragment implements View
         mMapAutoMoveTimer.schedule(mMapAutoMoveTask, Constant.MAP_AUTOMOVE_TIME, 1 * 1000);
 
         mAMap = getMap();
+        mAMap.setMapType(AMap.MAP_TYPE_NORMAL);
         mAMap.setOnMapLoadedListener(this);
         mAMap.getUiSettings().setZoomControlsEnabled(false);//关闭缩放控件
     }
@@ -222,17 +223,6 @@ public class MapFragment extends com.amap.api.maps2d.MapFragment implements View
     }
 
     /**
-     * 标记开始位置
-     */
-    private void markStartPoint(LatLng latlng){
-        MarkerOptions markerOption = new MarkerOptions();
-        markerOption.position(latlng);
-        markerOption.anchor(0.5f, 0.5f);
-        markerOption.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_start));
-        mAMap.addMarker(markerOption);
-    }
-
-    /**
      * 标记我的当前位置
      */
     private void markMyPoint(LatLng myLatLng){
@@ -244,6 +234,17 @@ public class MapFragment extends com.amap.api.maps2d.MapFragment implements View
             myPosintMarker = mAMap.addMarker(markerOption);
         }
         myPosintMarker.setPosition(myLatLng);
+    }
+
+    /**
+     * 标记开始位置
+     */
+    private void markStartPoint(LatLng latlng){
+        MarkerOptions markerOption = new MarkerOptions();
+        markerOption.position(latlng);
+        markerOption.anchor(0.5f, 0.5f);
+        markerOption.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_start));
+        mAMap.addMarker(markerOption);
     }
 
     private void drawLine(LatLng endPoint){

@@ -1,8 +1,11 @@
 package com.codoon.clubgps.bean;
 
-import com.amap.api.maps2d.AMapUtils;
-import com.amap.api.maps2d.model.LatLng;
+import com.amap.api.maps.AMapUtils;
+import com.amap.api.maps.model.LatLng;
 import com.codoon.clubgps.util.LogUtil;
+
+import org.litepal.annotation.Column;
+import org.litepal.crud.DataSupport;
 
 import java.util.Date;
 
@@ -14,8 +17,9 @@ import java.util.Date;
  * 记录跑步时的每一个点
  */
 
-public class GPSPoint {
+public class GPSPoint extends DataSupport {
 
+    @Column(ignore = true)
     private static final String TAG = "GPSPoint";
 
     private double latitude;//纬度
@@ -31,6 +35,7 @@ public class GPSPoint {
 
     private boolean is_valid = true;//是否为有效的点
 
+    @Column(ignore = true)
     private LatLng latLng;
 
     private GPSPoint(){}
