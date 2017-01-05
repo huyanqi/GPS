@@ -9,14 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.codoon.clubgps.R;
-import com.codoon.clubgps.bean.GPSPoint;
 import com.codoon.clubgps.ui.GPSControllerActivity;
 import com.codoon.clubgps.util.AnimUtil;
-import com.codoon.clubgps.util.CommonUtil;
 import com.codoon.clubgps.util.GPSSignal;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Created by Frankie on 2016/12/27.
@@ -29,7 +24,6 @@ public class ControllerFragment extends Fragment implements View.OnClickListener
     private ImageView openMapIv;
     private ImageView gpsSignalIv;
     private TextView gpsSignalTv;
-    private Timer mRunTimeTimer;
 
     private ImageView pauseIv;
     private ImageView resumeIv;
@@ -38,10 +32,6 @@ public class ControllerFragment extends Fragment implements View.OnClickListener
     private TextView distanceTv;
     private TextView durationTv;
     private TextView avgPaceTv;
-
-    private int runTime = 0;//跑步耗时
-    private double runDistance = 0;//跑步距离
-    private long avgPace = 0;//当前平均配速
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,46 +69,24 @@ public class ControllerFragment extends Fragment implements View.OnClickListener
     /**
      * 更新运动数据
      */
-    public void updateSportData(GPSPoint gpsPoint){
-        runDistance += gpsPoint.getDistance();
-        distanceTv.setText(CommonUtil.format2(runDistance / 1000));
-        avgPaceTv.setText(CommonUtil.getPaceTimeStr( (avgPace += gpsPoint.getPace()) / 2 ));//(当前平均配速+本次配速) /2
+    public void updateRunData(String distance, String avgPace){
+        distanceTv.setText(distance);
+        avgPaceTv.setText(avgPace);
     }
 
     /**
-     * 更新运动数据
+     * 更新运动持续时间
      */
-    public void updateRunData(String distance, String avgPace){
-        distanceTv.setText(distance);
-        distanceTv.setText(avgPace);
+    public void updateRunDuration(String runTime){
+        durationTv.setText(runTime);
     }
 
     /**
      * 第一次定位成功，开始跑步
      */
     public void onFirstLocationSuccess() {
-        initTimer();
-    }
 
-    private void initTimer(){
-        mRunTimeTimer = new Timer();
-        mRunTimeTimer.schedule(mRunTimeTask, 1000, 1000);
     }
-
-    private TimerTask mRunTimeTask = new TimerTask() {
-        @Override
-        public void run() {
-            if(mControllerActivity.isRunning()){
-                rootView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        runTime ++;
-                        durationTv.setText(CommonUtil.getPeriodTime(runTime));
-                    }
-                });
-            }
-        }
-    };
 
     @Override
     public void onClick(View v) {
@@ -133,14 +101,14 @@ public class ControllerFragment extends Fragment implements View.OnClickListener
         }
     }
 
-    private void sportPause(){
+    public void sportPause(){
         AnimUtil.alpha(pauseIv, true);
         AnimUtil.alpha(resumeIv, false);
         AnimUtil.alpha(stopIv, false);
         mControllerActivity.sportPause();
     }
 
-    private void sportResume() {
+    public void sportResume() {
         AnimUtil.alpha(pauseIv, false);
         AnimUtil.alpha(resumeIv, true);
         AnimUtil.alpha(stopIv, true);
@@ -198,14 +166,6 @@ public class ControllerFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void onDestroy() {
-        if(mRunTimeTimer != null) {
-            mRunTimeTimer.cancel();
-            mRunTimeTimer = null;
-        }
-        if(mRunTimeTask != null){
-            mRunTimeTask.cancel();
-            mRunTimeTask = null;
-        }
         super.onDestroy();
     }
 

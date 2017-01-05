@@ -7,7 +7,9 @@ import com.codoon.clubgps.util.LogUtil;
 import org.litepal.annotation.Column;
 import org.litepal.crud.DataSupport;
 
+import java.text.DecimalFormat;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Frankie on 2016/12/28.
@@ -31,6 +33,9 @@ public class GPSPoint extends DataSupport {
     private long timestamp;//坐标产生的时间
     private int index;//本次跑步产生的第几个点
 
+    private double speed;//当前速度,单位:km/h
+    private double calories;//本次消耗的卡路里,单位:kcal
+
     private boolean is_running;//正在跑步中(非暂停)
 
     private boolean is_valid = true;//是否为有效的点
@@ -38,7 +43,7 @@ public class GPSPoint extends DataSupport {
     @Column(ignore = true)
     private LatLng latLng;
 
-    private GPSPoint(){}
+    public GPSPoint(){}
 
     /**
      *
@@ -60,14 +65,20 @@ public class GPSPoint extends DataSupport {
             LogUtil.i(TAG, "验证结果:"+is_valid);
 
             //离上一个点的时间,单位s
-            long duration = (timestamp - lastGPSPoint.getTimestamp()) / 1000;
+            double duration = Double.parseDouble(new DecimalFormat("#.##").format((timestamp - lastGPSPoint.getTimestamp()) / 1000d));
 
+            //有效的点
             if(is_valid){
                 index++;
                 //计算配速
                 LogUtil.i(TAG, "distance="+distance+",计算配速:1000/"+Math.round(distance)+"*"+duration);
                 pace = (long) ((1000d / distance) * duration);
 
+                //计算卡路里消耗
+                calories = 65 * (distance / 1000) * 1.036;//暂时写死体重65kg，和K值 K = 30 / 速度(分钟/400米)
+
+                //计算速度，单位 km/h
+                speed = (distance / 1000 )/ (duration / 3600);
             }
 
         }
@@ -112,6 +123,10 @@ public class GPSPoint extends DataSupport {
         return latLng;
     }
 
+    public void setLatLng(LatLng latLng) {
+        this.latLng = latLng;
+    }
+
     public void setIs_running(boolean is_running) {
         this.is_running = is_running;
     }
@@ -124,6 +139,22 @@ public class GPSPoint extends DataSupport {
         return is_valid;
     }
 
+    public double getSpeed() {
+        return speed;
+    }
+
+    public double getCalories() {
+        return calories;
+    }
+
+    /**
+     * 获取有效的路径点
+     * @return
+     */
+    public static List<GPSPoint> getValidDatas(){
+        return DataSupport.where("is_valid = 1").order("index").find(GPSPoint.class);
+    }
+
     @Override
     public String toString() {
         return "GPSPoint{" +
@@ -131,6 +162,8 @@ public class GPSPoint extends DataSupport {
                 ", pace=" + pace +
                 ", index=" + index +
                 ", is_running=" + is_running +
+                ", speed=" + speed +
+                ", calories=" + calories +
                 '}';
     }
 }

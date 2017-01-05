@@ -6,6 +6,9 @@
     <string name="cancel">取消</string>
     <string name="run">跑步</string>
     <string name="alert">提示</string>
+    <string name="resume">恢复</string>
+    <string name="delete">删除</string>
+    <string name="complete">完成</string>
 
     <string name="gps_sinal_strong">GPS信号强</string>
     <string name="gps_sinal_normal">GPS信号一般</string>
@@ -22,5 +25,8 @@
     <string name="gps_searching_signal_tips">GPS信号搜索中</string>
 
     <string name="alert_run_finish">确定完成本次跑步吗?</string>
+    <string name="alert_run_delete">确定放弃本次跑步记录吗?</string>
+
+    <string name="toast_distance_too_short">本次运动距离太短,无法保存</string>
 
 </resources>

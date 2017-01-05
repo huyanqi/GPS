@@ -14,12 +14,6 @@ android {
 
     }
 
-    sourceSets {
-        main {
-            jniLibs.srcDirs = ['libs']
-        }
-    }
-
     buildTypes {
         release {
             minifyEnabled false
@@ -39,4 +33,5 @@ dependencies {
     compile 'com.orhanobut:logger:1.15'
     compile 'org.litepal.android:core:1.4.1'
     compile files('libs/AMap3DMap_4.1.3_AMapLocation_3.2.1_20161228.jar')
+    compile 'com.tencent.bugly:crashreport:latest.release'
 }

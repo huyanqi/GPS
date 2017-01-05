@@ -48,15 +48,17 @@ public class MapFragment extends com.amap.api.maps.MapFragment implements View.O
     private GPSControllerActivity mControllerActivity;
     private AMap mAMap;
     private TextView gpsNoSignalTipsTv;
-    private List<GPSPoint> mGPSPoints;//已经绘制过的gps坐标点
     private double mCurrentLat, mCurrentLng;
     private CacheUtil mCacheUtil;
     private Marker myPosintMarker;//我的坐标标记
     private int lineColor;
     private Timer mMapAutoMoveTimer;
 
+    private LatLngBounds.Builder builder;
     private long lastMoveCenterTime = System.currentTimeMillis();
     private LatLng lastGPSPoint;//最后一次打的点
+
+    private int mPointSize;//记录打点个数
 
     /**
      * 打点
@@ -70,7 +72,7 @@ public class MapFragment extends com.amap.api.maps.MapFragment implements View.O
         //更新我的位置marker
         markMyPoint(newGPSPoint.getLatLng());
 
-        if(mGPSPoints.size() == 1) {
+        if(mPointSize == 1) {
             //如果是第一次定位成功，移动过去
             moveToMyLocation();
         }
@@ -90,6 +92,25 @@ public class MapFragment extends com.amap.api.maps.MapFragment implements View.O
 
         lastGPSPoint = newGPSPoint.getLatLng();
 
+    }
+
+    /**
+     * 批量打点
+     * @param gpsPointList
+     */
+    public void drawAllLines(List<GPSPoint> gpsPointList){
+        mPointSize = gpsPointList.size();
+        List<LatLng> latLngList = new ArrayList<>();
+        LatLng latLng;
+        for(GPSPoint gpsPoint : gpsPointList){
+            latLng = new LatLng(gpsPoint.getLatitude(), gpsPoint.getLongitude());
+            latLngList.add(latLng);
+            builder.include(latLng);
+        }
+
+        mAMap.addPolyline(new PolylineOptions().addAll(latLngList).geodesic(true).width(16).color(lineColor));
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(builder.build(), screenWidth, screenHeight, CommonUtil.dip2px(this.getActivity(), 60));
+        mAMap.animateCamera(cameraUpdate);
     }
 
     public void onGPSSignalChanged(GPSSignal gpsSignal){
@@ -120,7 +141,7 @@ public class MapFragment extends com.amap.api.maps.MapFragment implements View.O
      * @param gpsPoint
      */
     private void addNewGPSPoint(GPSPoint gpsPoint){
-        mGPSPoints.add(gpsPoint);
+        mPointSize++;
         builder.include(gpsPoint.getLatLng());
         this.mCurrentLat = gpsPoint.getLatitude();
         this.mCurrentLng = gpsPoint.getLongitude();
@@ -144,7 +165,6 @@ public class MapFragment extends com.amap.api.maps.MapFragment implements View.O
     private void init() {
         initMap();
         mControllerActivity = (GPSControllerActivity) getActivity();
-        mGPSPoints = new ArrayList<GPSPoint>();
         mCacheUtil = CacheUtil.getInstance();
         screenWidth = CommonUtil.getScreenWidth(GPSApplication.getAppContext());
         screenHeight = CommonUtil.getScreenHeight(GPSApplication.getAppContext());
@@ -166,6 +186,8 @@ public class MapFragment extends com.amap.api.maps.MapFragment implements View.O
         mAMap.setMapType(AMap.MAP_TYPE_NORMAL);
         mAMap.setOnMapLoadedListener(this);
         mAMap.getUiSettings().setZoomControlsEnabled(false);//关闭缩放控件
+
+        builder = new LatLngBounds.Builder();
     }
 
     private TimerTask mMapAutoMoveTask = new TimerTask() {
@@ -219,6 +241,7 @@ public class MapFragment extends com.amap.api.maps.MapFragment implements View.O
 
     @Override
     public void onMapLoaded() {
+        mControllerActivity.onMapLoaded();
         mapMoveToMyLocation();
     }
 
@@ -252,11 +275,8 @@ public class MapFragment extends com.amap.api.maps.MapFragment implements View.O
         Polyline polyline = mAMap.addPolyline(new PolylineOptions().add(lastGPSPoint).add(endPoint).geodesic(true).width(16).color(lineColor));
         //如果打点异常，放弃本次打点
         if(polyline == null) return;
-        //mAMap.addCircle(new CircleOptions().center(endPoint).radius(mAMap.getScalePerPixel() * 16).fillColor(lineColor).strokeColor(Color.argb(1,0,0,0)));
         lastGPSPoint = endPoint;
     }
-
-    private LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
     /**
      * 将地图移动到我的位置
@@ -305,8 +325,8 @@ public class MapFragment extends com.amap.api.maps.MapFragment implements View.O
      * 将我的路线移动到地图中央
      */
     private void moveToCenter(){
-        if(mGPSPoints.size() < 2) return;
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(builder.build(), screenWidth, screenHeight,CommonUtil.dip2px(this.getActivity(),60));
+        if(mPointSize < 2) return;
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(builder.build(), screenWidth, screenHeight, CommonUtil.dip2px(this.getActivity(), 60));
         mAMap.animateCamera(cameraUpdate, 500, null);
     }
 
@@ -316,7 +336,7 @@ public class MapFragment extends com.amap.api.maps.MapFragment implements View.O
         mMapAutoMoveTask.cancel();
         mMapAutoMoveTimer.cancel();
 
-        Logger.i("退出地图，一共打点 "+ mGPSPoints.size()+" 个");
+        Logger.i("退出地图，一共打点 "+ mPointSize +" 个");
         super.onDestroy();
     }
 

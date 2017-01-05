@@ -14,11 +14,17 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.model.LatLng;
+import com.amap.api.trace.LBSTraceClient;
+import com.amap.api.trace.TraceListener;
+import com.amap.api.trace.TraceLocation;
 import com.codoon.clubgps.application.GPSApplication;
 import com.codoon.clubgps.bean.GPSPoint;
 import com.codoon.clubgps.util.GPSSignal;
 import com.codoon.clubgps.util.LogUtil;
 import com.orhanobut.logger.Logger;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Frankie on 2016/12/28.
@@ -28,7 +34,7 @@ import com.orhanobut.logger.Logger;
  * 所有的GPS位置获取都从这里
  */
 
-public class GPSService extends Service implements AMapLocationListener {
+public class GPSService extends Service implements AMapLocationListener, TraceListener {
 
     private final String TAG = "GPSService";
 
@@ -36,9 +42,14 @@ public class GPSService extends Service implements AMapLocationListener {
     private AMapLocationClient mMapLocationClient;
     private OnGPSLocationChangedListener mOnGPSLocationChangedListener;
 
+    /**
+     * 轨迹纠偏相关
+     */
+    private LBSTraceClient mTraceClient;
+    private List<TraceLocation> mTraceLocationList;
+
     private boolean isRunning = true;//是否正在跑步中(非暂停状态)
     private boolean isSearchingGPS = true;//GPS信号搜索中
-    private boolean runningStarted = false;
 
     private GPSPoint lastGPSPoint;//记录最后一个GPS坐标点
 
@@ -83,9 +94,12 @@ public class GPSService extends Service implements AMapLocationListener {
             }
 
             //5.将该点数据展示到界面里
-            if (!runningStarted) {
+            /*mTraceLocationList.add(new TraceLocation(aMapLocation.getLongitude(), aMapLocation.getLatitude(), aMapLocation.getSpeed(), aMapLocation.getBearing(), aMapLocation.getTime()));
+            if(mTraceLocationList.size() > 30)
+                mTraceClient.queryProcessedTrace(1, mTraceLocationList, LBSTraceClient.TYPE_AMAP, this);*/
+
+            if (lastGPSPoint == null) {
                 //跑步开始
-                runningStarted = true;
                 mOnGPSLocationChangedListener.onFirstGPSLocation(gpsPoint);
                 LogUtil.i(TAG, "这是一个起点");
             } else {
@@ -102,12 +116,12 @@ public class GPSService extends Service implements AMapLocationListener {
 
     public void sportPause(){
         isRunning = false;
-
+        stopLocation();
     }
 
     public void sportResume(){
         isRunning = true;
-
+        startLocation();
     }
 
     private int fakeAccuracy;
@@ -130,30 +144,35 @@ public class GPSService extends Service implements AMapLocationListener {
     public void onCreate() {
         super.onCreate();
         mGPSBinder = new GPSBinder();
-        startGPSLocation();
     }
 
     /**
      * 启动定位
      */
-    private void startGPSLocation() {
+    public void initGPSLocation() {
         /*启动高德定位*/
         mMapLocationClient = new AMapLocationClient(GPSApplication.getAppContext());
         mMapLocationClient.setLocationListener(this);
         AMapLocationClientOption locationOption = new AMapLocationClientOption();
         /*高精度定位,会同时使用网络定位和GPS定位，优先返回最高精度的定位结果*/
         locationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
-        locationOption.setInterval(5000);//每2s定位一次，系统默认就是2s
+        locationOption.setInterval(800);//系统默认是2000ms,最小800ms
         locationOption.setNeedAddress(false);//不需要返回地址信息
         locationOption.setMockEnable(true);//允许模拟位置，可以调用第三方工具模拟GPS
         mMapLocationClient.setLocationOption(locationOption);
 
+        mTraceClient = LBSTraceClient.getInstance(this.getApplicationContext());
+        mTraceLocationList = new ArrayList<TraceLocation>();
+
         startLocation();
     }
 
-    private void startLocation(){
-        mMapLocationClient.startLocation();
-        //startFake();//开启模拟定位
+    private void startLocation() {
+        if(GPSApplication.getAppContext().isFake()){
+            startFake();//开启模拟定位
+        }else{
+            mMapLocationClient.startLocation();
+        }
     }
 
     private void stopLocation() {
@@ -248,6 +267,25 @@ public class GPSService extends Service implements AMapLocationListener {
             }
         };
         fakeThread.start();
+    }
+
+    public void setLastGPSPoint(GPSPoint lastGPSPoint) {
+        this.lastGPSPoint = lastGPSPoint;
+    }
+
+    @Override
+    public void onRequestFailed(int i, String s) {
+        System.out.println("trace onRequestFailed:"+i+","+s);
+    }
+
+    @Override
+    public void onTraceProcessing(int i, int i1, List<LatLng> list) {
+        System.out.println("trace onTraceProcessing:"+i+","+i1+",size:"+list.size());
+    }
+
+    @Override
+    public void onFinished(int i, List<LatLng> list, int i1, int i2) {
+        System.out.println("trace onFinished:"+i+",size:"+list.size()+","+i1+","+i2);
     }
 
 }
