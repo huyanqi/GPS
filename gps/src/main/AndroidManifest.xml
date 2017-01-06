@@ -58,7 +58,8 @@
             android:theme="@style/Theme.AppCompat.NoActionBar"
             android:windowSoftInputMode="stateHidden">
         </activity>
-
+        <activity android:name=".ui.HistoryListActivity">
+        </activity>
     </application>
 
 </manifest>

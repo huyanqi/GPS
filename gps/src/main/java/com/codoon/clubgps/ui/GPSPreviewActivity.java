@@ -3,6 +3,7 @@ package com.codoon.clubgps.ui;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
@@ -58,7 +59,9 @@ public class GPSPreviewActivity extends FragmentActivity implements View.OnClick
         uiSettings.setAllGesturesEnabled(false);
         //2.关闭缩放控件
         uiSettings.setZoomControlsEnabled(false);
-        //3.获取本地跑步所有路线点
+        //3.隐藏logo
+        uiSettings.setLogoBottomMargin(-50);
+        //4.获取本地跑步所有路线点
         gpsPointsList = GPSPoint.getValidDatas();
         List<LatLng> latLngs = new ArrayList<LatLng>();
         LatLng latLng;
@@ -198,18 +201,32 @@ public class GPSPreviewActivity extends FragmentActivity implements View.OnClick
 
     private void complete(){
         if(gpsPointsList == null) return;//如果地图还没加载完就点击了按钮，则无效
-        RecordDetail recordDetail = new RecordDetail().build(gpsPointsList);
-        //保存运动记录
-        recordDetail.save();
 
-        //保存路线点
-        DataSupport.saveAll(recordDetail.getRecordGPSPointList());
+        //生成路线缩略图
+        mAMap.getMapScreenShot(new AMap.OnMapScreenShotListener() {
+            @Override
+            public void onMapScreenShot(Bitmap bitmap) {
 
-        //清空数据库
-        DataSupport.deleteAll(GPSPoint.class);
-        //通知上一个界面退出,并退出当前界面
-        setResult(RESULT_OK);
-        finish();
+            }
+
+            @Override
+            public void onMapScreenShot(Bitmap bitmap, int i) {
+                RecordDetail recordDetail = new RecordDetail().build(bitmap, gpsPointsList);
+                //保存运动记录
+                recordDetail.save();
+
+                //保存路线点
+                DataSupport.saveAll(recordDetail.getRecordGPSPointList());
+
+                //清空数据库
+                DataSupport.deleteAll(GPSPoint.class);
+                //通知上一个界面退出,并退出当前界面
+                setResult(RESULT_OK);
+                finish();
+            }
+        });
+
+
     }
 
 }

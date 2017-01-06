@@ -19,6 +19,7 @@ import com.amap.api.trace.TraceListener;
 import com.amap.api.trace.TraceLocation;
 import com.codoon.clubgps.application.GPSApplication;
 import com.codoon.clubgps.bean.GPSPoint;
+import com.codoon.clubgps.util.FileUtil;
 import com.codoon.clubgps.util.GPSSignal;
 import com.codoon.clubgps.util.LogUtil;
 import com.orhanobut.logger.Logger;
@@ -94,9 +95,10 @@ public class GPSService extends Service implements AMapLocationListener, TraceLi
             }
 
             //5.将该点数据展示到界面里
-            /*mTraceLocationList.add(new TraceLocation(aMapLocation.getLongitude(), aMapLocation.getLatitude(), aMapLocation.getSpeed(), aMapLocation.getBearing(), aMapLocation.getTime()));
+            mTraceLocationList.add(new TraceLocation(aMapLocation.getLongitude(), aMapLocation.getLatitude(), aMapLocation.getSpeed(), aMapLocation.getBearing(), aMapLocation.getTime()));
             if(mTraceLocationList.size() > 30)
-                mTraceClient.queryProcessedTrace(1, mTraceLocationList, LBSTraceClient.TYPE_AMAP, this);*/
+                mTraceClient.queryProcessedTrace(1, mTraceLocationList, LBSTraceClient.TYPE_AMAP, this);
+            System.out.println("点数:"+mTraceLocationList.size());
 
             if (lastGPSPoint == null) {
                 //跑步开始
@@ -112,6 +114,10 @@ public class GPSService extends Service implements AMapLocationListener, TraceLi
             mOnGPSLocationChangedListener.onAccuracyChanged(new GPSSignal(-1));
         }
 
+    }
+
+    public void writePoints(){
+        FileUtil.writePoints(mTraceLocationList);
     }
 
     public void sportPause(){

@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
+import com.amap.api.maps.UiSettings;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
@@ -174,6 +175,7 @@ public class MapFragment extends com.amap.api.maps.MapFragment implements View.O
         rootView.findViewById(R.id.close_btn).setOnClickListener(this);
         rootView.findViewById(R.id.fake_signal_weak).setOnClickListener(this);
         rootView.findViewById(R.id.fake_signal_strong).setOnClickListener(this);
+        rootView.findViewById(R.id.write_points).setOnClickListener(this);
     }
 
     private void initMap(){
@@ -185,7 +187,10 @@ public class MapFragment extends com.amap.api.maps.MapFragment implements View.O
         mAMap = getMap();
         mAMap.setMapType(AMap.MAP_TYPE_NORMAL);
         mAMap.setOnMapLoadedListener(this);
-        mAMap.getUiSettings().setZoomControlsEnabled(false);//关闭缩放控件
+
+        UiSettings uiSettings = mAMap.getUiSettings();
+        uiSettings.setZoomControlsEnabled(false);//关闭缩放控件
+        uiSettings.setLogoBottomMargin(-50);
 
         builder = new LatLngBounds.Builder();
     }
@@ -215,6 +220,8 @@ public class MapFragment extends com.amap.api.maps.MapFragment implements View.O
             mControllerActivity.fakeSignal(500);
         }else if(v.getId() == R.id.fake_signal_strong){
             mControllerActivity.fakeSignal(10);
+        }else if(v.getId() == R.id.write_points){
+            mControllerActivity.writePoints();
         }
     }
 

@@ -121,7 +121,8 @@ public class GPSControllerActivity extends AppCompatActivity implements GPSServi
      */
     public void sportStop() {
         //先做跳转判断,如果运动距离太短，直接退出当前界面，否则跳转进运动预览界面
-        if (DataSupport.count(GPSPoint.class) > savePointPer) {
+        int count = DataSupport.count(GPSPoint.class);
+        if (count >= savePointPer) {
             //已有运动记录产生
             //先保存还未保存的点
             savePoints2DB(mGPSPoints);
@@ -134,6 +135,9 @@ public class GPSControllerActivity extends AppCompatActivity implements GPSServi
         }
     }
 
+    public void writePoints(){
+        mGPSService.writePoints();
+    }
 
     private void bindGPSService() {
         Intent gpsServiceIntent = new Intent(this, GPSService.class);
@@ -148,7 +152,7 @@ public class GPSControllerActivity extends AppCompatActivity implements GPSServi
     /**
      * 地图已经加载后，再绑定service
      * 原因是service绑定成功以后，会检查当前是否是继续完成未完成运动
-     * 如果检查出来需要继续完成上次运动，则马上要在地图上绘制之前路线，避免同步问题
+     * 如果检查出来需要继续完成上次运动，则马上要在地图上绘制之前路线，避免地图未加载，就开始画线
      */
     public void onMapLoaded() {
         bindGPSService();
