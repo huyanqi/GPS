@@ -4,13 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 
 import com.codoon.clubgps.application.GPSApplication;
-import com.codoon.clubgps.bean.RecordDetail;
 import com.codoon.clubgps.ui.GPSControllerActivity;
+import com.codoon.clubgps.ui.HistoryListActivity;
 import com.codoon.clubgps.util.CacheUtil;
-
-import org.litepal.crud.DataSupport;
-
-import java.util.List;
 
 /**
  * Created by Frankie on 2016/12/27.
@@ -63,8 +59,10 @@ public class GPSManager {
      * @param user_id
      * @return
      */
-    public List<RecordDetail> getUserRecord(String user_id){
-        return DataSupport.where("user_id = ?", user_id).find(RecordDetail.class);
+    public void getUserRecord(String user_id){
+        Intent intent = new Intent(mActivity, HistoryListActivity.class);
+        intent.putExtra("user_id", user_id);
+        mActivity.startActivity(intent);
     }
 
 }

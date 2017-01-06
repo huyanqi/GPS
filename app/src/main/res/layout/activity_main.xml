@@ -24,6 +24,10 @@
         android:id="@+id/record_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="获取我的跑步记录"/>
+        android:text="跑步历史"/>
+
+    <com.codoon.clubgps.widget.HistoryListView
+        android:layout_width="match_parent"
+        android:layout_height="180dp"></com.codoon.clubgps.widget.HistoryListView>
 
 </LinearLayout>

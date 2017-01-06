@@ -9,7 +9,7 @@ import org.litepal.crud.DataSupport;
  *
  */
 
-public class RecordGPSPoint extends DataSupport {
+public class HistoryGPSPoint extends DataSupport {
 
     private double latitude;//纬度
     private double longitude;//经度
@@ -23,7 +23,7 @@ public class RecordGPSPoint extends DataSupport {
     private double speed;//当前速度,单位:km/h
     private double calories;//本次消耗的卡路里,单位:kcal
 
-    public RecordGPSPoint (GPSPoint gpsPoint){
+    public HistoryGPSPoint(GPSPoint gpsPoint){
         this.latitude = gpsPoint.getLatitude();
         this.longitude = gpsPoint.getLongitude();
         this.distance = gpsPoint.getDistance();
@@ -34,6 +34,6 @@ public class RecordGPSPoint extends DataSupport {
         this.calories = gpsPoint.getCalories();
     }
 
-    private RecordGPSPoint(){}
+    private HistoryGPSPoint(){}
 
 }

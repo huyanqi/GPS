@@ -23,7 +23,7 @@ import com.amap.api.maps.model.PolylineOptions;
 import com.codoon.clubgps.R;
 import com.codoon.clubgps.application.GPSApplication;
 import com.codoon.clubgps.bean.GPSPoint;
-import com.codoon.clubgps.bean.RecordDetail;
+import com.codoon.clubgps.bean.HistoryDetail;
 import com.codoon.clubgps.util.CommonUtil;
 import com.codoon.clubgps.util.DialogUtil;
 
@@ -211,7 +211,7 @@ public class GPSPreviewActivity extends FragmentActivity implements View.OnClick
 
             @Override
             public void onMapScreenShot(Bitmap bitmap, int i) {
-                RecordDetail recordDetail = new RecordDetail().build(bitmap, gpsPointsList);
+                HistoryDetail recordDetail = new HistoryDetail().build(bitmap, gpsPointsList);
                 //保存运动记录
                 recordDetail.save();
 

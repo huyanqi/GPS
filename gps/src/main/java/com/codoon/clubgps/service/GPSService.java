@@ -95,7 +95,7 @@ public class GPSService extends Service implements AMapLocationListener, TraceLi
             }
 
             //5.将该点数据展示到界面里
-            mTraceLocationList.add(new TraceLocation(aMapLocation.getLongitude(), aMapLocation.getLatitude(), aMapLocation.getSpeed(), aMapLocation.getBearing(), aMapLocation.getTime()));
+            mTraceLocationList.add(new TraceLocation(aMapLocation.getLongitude(), aMapLocation.getLatitude(), 0, 0, aMapLocation.getTime()));
             if(mTraceLocationList.size() > 30)
                 mTraceClient.queryProcessedTrace(1, mTraceLocationList, LBSTraceClient.TYPE_AMAP, this);
             System.out.println("点数:"+mTraceLocationList.size());

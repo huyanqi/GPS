@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item android:state_checked="true" android:drawable="@drawable/bg_corner_white_right"></item>
+    <item android:drawable="@drawable/bg_coner_right_content"/>
+</selector>

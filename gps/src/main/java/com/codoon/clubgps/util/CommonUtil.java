@@ -3,8 +3,13 @@ package com.codoon.clubgps.util;
 import android.content.Context;
 import android.util.DisplayMetrics;
 
+import com.codoon.clubgps.R;
+import com.codoon.clubgps.application.GPSApplication;
+
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by huan on 15/5/27.
@@ -97,6 +102,12 @@ public class CommonUtil {
         return df.format(value);
     }
 
+    public static String getDistanceKm(double m){
+        DecimalFormat df = new DecimalFormat("0.00");
+        df.setRoundingMode(RoundingMode.HALF_UP);
+        return df.format(m / 1000);
+    }
+
     /**
      * 平均配速转换
      *
@@ -120,8 +131,33 @@ public class CommonUtil {
             tmp += String.valueOf(second);
         tmp += "\"";
         return tmp;
+    }
 
+    /**
+     * 时间戳转称可以展示的时间
+     * @param timestamp
+     * @return
+     */
+    public static String parseTime(long timestamp){
+        Date date = new Date(timestamp);
+        Context context = GPSApplication.getContext();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy"+context.getString(R.string.date_year)
+                +"MM"+context.getString(R.string.date_month)
+                +"dd"+context.getString(R.string.date_day)
+                +" HH"+context.getString(R.string.date_hour)
+                +"mm"+context.getString(R.string.date_minute));
+        return sdf.format(date);
+    }
 
+    /**
+     * 将时间戳解析成yyyyMM格式 主要用在历史列表分组
+     * @param timestamp
+     * @return
+     */
+    public static String parseyyyyMM(long timestamp){
+        Date date = new Date(timestamp);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyM");
+        return sdf.format(date);
     }
 
 }

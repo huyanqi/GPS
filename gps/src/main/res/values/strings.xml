@@ -29,4 +29,13 @@
 
     <string name="toast_distance_too_short">本次运动距离太短,无法保存</string>
 
+    <string name="date_year">年</string>
+    <string name="date_month">月</string>
+    <string name="date_day">日</string>
+    <string name="date_hour">时</string>
+    <string name="date_minute">分</string>
+    <string name="date_week">周</string>
+
+    <string name="time_currentmonth">本月</string>
+
 </resources>

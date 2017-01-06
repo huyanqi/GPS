@@ -13,4 +13,9 @@
         <item name="android:backgroundDimAmount">0.2</item>
     </style>
 
+    <style name="recycle_style">
+        <item name="android:overScrollMode">never</item>
+        <item name="android:fadeScrollbars">false</item>
+    </style>
+
 </resources>

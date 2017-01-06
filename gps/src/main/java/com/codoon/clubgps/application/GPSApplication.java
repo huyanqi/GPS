@@ -2,6 +2,7 @@ package com.codoon.clubgps.application;
 
 import android.content.SharedPreferences;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.tencent.bugly.crashreport.CrashReport;
 
 import org.litepal.LitePal;
@@ -24,6 +25,7 @@ public class GPSApplication extends LitePalApplication {
         appContext = this;
         LitePal.initialize(this);
         CrashReport.initCrashReport(getApplicationContext(), "9267c19260", false);
+        Fresco.initialize(this);
     }
 
     public static GPSApplication getAppContext() {

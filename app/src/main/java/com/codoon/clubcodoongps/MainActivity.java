@@ -5,10 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ToggleButton;
 
-import com.codoon.clubgps.bean.RecordDetail;
 import com.codoon.clubgps.core.GPSManager;
-
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,10 +40,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.record_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<RecordDetail> recordDetailList = mGPSManager.getUserRecord(user_id);
-                for(RecordDetail recordDetail : recordDetailList){
-                    System.out.println(recordDetail);
-                }
+                mGPSManager.getUserRecord(user_id);
             }
         });
 

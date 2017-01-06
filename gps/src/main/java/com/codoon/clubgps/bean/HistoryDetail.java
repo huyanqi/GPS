@@ -18,7 +18,7 @@ import java.util.UUID;
  * 记录运动的详情(不记录路线点)
  */
 
-public class RecordDetail extends DataSupport {
+public class HistoryDetail extends DataSupport {
 
     private String record_id;
     private String user_id;
@@ -37,14 +37,14 @@ public class RecordDetail extends DataSupport {
     private long saveTimesStamp;//跑步开始时间(不是记录生成时间)
 
     @Column(ignore = true)
-    private List<RecordGPSPoint> recordGPSPointList;
+    private List<HistoryGPSPoint> recordGPSPointList;
 
     /**
      * 生成一个完整的运动记录
      * @param gpsPointList 本次运动所有路线点
      * @return
      */
-    public RecordDetail build(Bitmap bitmap, List<GPSPoint> gpsPointList){
+    public HistoryDetail build(Bitmap bitmap, List<GPSPoint> gpsPointList){
         recordGPSPointList = new ArrayList<>();
         //生成记录ID
         record_id = UUID.randomUUID().toString();
@@ -54,7 +54,7 @@ public class RecordDetail extends DataSupport {
         long pace = 0;//总配速
         double speed = 0;//总速度
         for(GPSPoint gpsPoint : gpsPointList){
-            recordGPSPointList.add(new RecordGPSPoint(gpsPoint));
+            recordGPSPointList.add(new HistoryGPSPoint(gpsPoint));
             total_length += gpsPoint.getDistance();
 
             pace += gpsPoint.getPace();
@@ -78,7 +78,7 @@ public class RecordDetail extends DataSupport {
         return this;
     }
 
-    public List<RecordGPSPoint> getRecordGPSPointList() {
+    public List<HistoryGPSPoint> getRecordGPSPointList() {
         return recordGPSPointList;
     }
 
@@ -86,9 +86,54 @@ public class RecordDetail extends DataSupport {
         return thum;
     }
 
+    public String getRecord_id() {
+        return record_id;
+    }
+
+    public long getMax_pace() {
+        return max_pace;
+    }
+
+    public long getAvg_pace() {
+        return avg_pace;
+    }
+
+    public double getMax_speed() {
+        return max_speed;
+    }
+
+    public double getAvg_speed() {
+        return avg_speed;
+    }
+
+    public double getTotal_length() {
+        return total_length;
+    }
+
+    public long getTotal_time() {
+        return total_time;
+    }
+
+    public double getTotal_calories() {
+        return total_calories;
+    }
+
+    public long getStartTimesStamp() {
+        return startTimesStamp;
+    }
+
+    public long getSaveTimesStamp() {
+        return saveTimesStamp;
+    }
+
+    public static List<HistoryDetail> getHistoryList(String user_id){
+        List<HistoryDetail> list = DataSupport.where("user_id = ?", user_id).order("saveTimesStamp DESC").find(HistoryDetail.class);
+        return list;
+    }
+
     @Override
     public String toString() {
-        return "RecordDetail{" +
+        return "HistoryDetail{" +
                 "record_id='" + record_id + '\'' +
                 ", user_id='" + user_id + '\'' +
                 ", total_length=" + total_length +
