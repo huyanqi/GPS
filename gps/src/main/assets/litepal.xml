@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <litepal>
-    <version value="1" ></version>
+    <version value="2" ></version>
     <dbname value="club_codoon_gps" ></dbname>
 
     <list>
@@ -10,6 +10,7 @@
         <mapping class="com.codoon.clubgps.bean.HistoryGPSPoint"></mapping>
         <mapping class="com.codoon.clubgps.bean.HistoryCount"></mapping>
         <mapping class="com.codoon.clubgps.bean.HistoryCountRelation"></mapping>
+        <mapping class="com.codoon.clubgps.bean.HistoryCountData"></mapping>
 
     </list>
 

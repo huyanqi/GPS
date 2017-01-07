@@ -39,6 +39,9 @@ public class HistoryListActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mAdapter = new HistoryListAdapter(mHistoryBeanList = new ArrayList<HistoryListBean>()));
 
         mHistoryBeanList.addAll(getDatas(HistoryDetail.getHistoryList(getIntent().getStringExtra("user_id"))));
+
+
+
     }
 
     /**

@@ -268,8 +268,10 @@ public class GPSControllerActivity extends AppCompatActivity implements GPSServi
 
     @Override
     protected void onDestroy() {
-        unbindService(gpsServiceConnection);
-        mGPSService.stopSelf();
+        if(mGPSService != null){
+            unbindService(gpsServiceConnection);
+            mGPSService.stopSelf();
+        }
         closeTimers();
         super.onDestroy();
     }

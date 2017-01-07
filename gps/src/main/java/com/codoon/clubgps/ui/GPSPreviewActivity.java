@@ -214,7 +214,7 @@ public class GPSPreviewActivity extends FragmentActivity implements View.OnClick
 
             @Override
             public void onMapScreenShot(Bitmap bitmap, int i) {
-                HistoryDetail recordDetail = new HistoryDetail().build(bitmap, intent.getIntExtra("runTime", 0), intent.getIntExtra("avgPace", 0), gpsPointsList);
+                HistoryDetail recordDetail = new HistoryDetail().build(bitmap, intent.getIntExtra("runTime", 0), intent.getLongExtra("avgPace", 0), gpsPointsList);
                 //保存运动记录
                 recordDetail.save();
 

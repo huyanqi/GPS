@@ -7,6 +7,7 @@ import org.litepal.crud.DataSupport;
  *
  * @see HistoryCount 和
  * @see HistoryDetail 的关系表
+ *
  */
 
 public class HistoryCountRelation extends DataSupport {
@@ -20,13 +21,6 @@ public class HistoryCountRelation extends DataSupport {
     public HistoryCountRelation(String countId, String historyDetailId){
         this.countId = countId;
         this.historyDetailId = historyDetailId;
-    }
-
-    public static boolean isExist(String countId, String historyDetailId){
-
-
-
-        return false;
     }
 
     @Override

@@ -2,8 +2,6 @@ package com.codoon.clubcodoongps;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 /**
  * Example local unit test, which will execute on the development machine (host).
  *
@@ -11,7 +9,16 @@ import static org.junit.Assert.*;
  */
 public class ExampleUnitTest {
     @Test
-    public void addition_isCorrect() throws Exception {
-        assertEquals(4, 2 + 2);
+    public void testgogogo() throws Exception {
+        double num = 301.32;
+        System.out.println(Math.floor(301.32));
+
+        int count = 0;
+        while(num > 0){
+            num /= 10;
+            count++;
+        }
+
+        System.out.println("位数:"+count);
     }
 }
