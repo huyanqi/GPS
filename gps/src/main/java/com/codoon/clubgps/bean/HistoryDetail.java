@@ -20,7 +20,7 @@ import java.util.UUID;
 
 public class HistoryDetail extends DataSupport {
 
-    private String record_id;
+    private String uuid;
     private String user_id;
 
     private long max_pace;//最大配速,单位:s/km
@@ -44,20 +44,20 @@ public class HistoryDetail extends DataSupport {
      * @param gpsPointList 本次运动所有路线点
      * @return
      */
-    public HistoryDetail build(Bitmap bitmap, List<GPSPoint> gpsPointList){
+    public HistoryDetail build(Bitmap bitmap, long total_time, long avg_pace, List<GPSPoint> gpsPointList){
         recordGPSPointList = new ArrayList<>();
+        this.total_time = total_time;
+        this.avg_pace = avg_pace;
         //生成记录ID
-        record_id = UUID.randomUUID().toString();
+        uuid = UUID.randomUUID().toString();
         //设置所属用户
         user_id = GPSApplication.getAppContext().getUser_id();
         //遍历所有坐标点设置对象属性
-        long pace = 0;//总配速
         double speed = 0;//总速度
         for(GPSPoint gpsPoint : gpsPointList){
             recordGPSPointList.add(new HistoryGPSPoint(gpsPoint));
             total_length += gpsPoint.getDistance();
 
-            pace += gpsPoint.getPace();
             max_pace = gpsPoint.getPace() > max_pace ? gpsPoint.getPace() : max_pace;
 
             speed += gpsPoint.getSpeed();
@@ -69,11 +69,9 @@ public class HistoryDetail extends DataSupport {
         startTimesStamp = gpsPointList.get(0).getTimestamp();
         saveTimesStamp = System.currentTimeMillis();
         int size = gpsPointList.size();
-        total_time = (gpsPointList.get(size - 1).getTimestamp() - startTimesStamp) / 1000;
-        avg_pace = pace / size;
         avg_speed = speed / size;
 
-        thum = "file:///"+FileUtil.saveGPSThum(bitmap, record_id).getAbsolutePath();
+        thum = "file:///"+FileUtil.saveGPSThum(bitmap, uuid).getAbsolutePath();
 
         return this;
     }
@@ -86,8 +84,8 @@ public class HistoryDetail extends DataSupport {
         return thum;
     }
 
-    public String getRecord_id() {
-        return record_id;
+    public String getUuid() {
+        return uuid;
     }
 
     public long getMax_pace() {
@@ -134,7 +132,7 @@ public class HistoryDetail extends DataSupport {
     @Override
     public String toString() {
         return "HistoryDetail{" +
-                "record_id='" + record_id + '\'' +
+                "uuid='" + uuid + '\'' +
                 ", user_id='" + user_id + '\'' +
                 ", total_length=" + total_length +
                 ", max_pace=" + max_pace +
@@ -147,4 +145,5 @@ public class HistoryDetail extends DataSupport {
                 ", saveTimesStamp=" + saveTimesStamp +
                 '}';
     }
+
 }

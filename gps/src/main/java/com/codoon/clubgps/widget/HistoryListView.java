@@ -3,13 +3,13 @@ package com.codoon.clubgps.widget;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.LinearGradient;
-import android.graphics.Paint;
-import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.codoon.clubgps.bean.HistoryDetail;
 import com.codoon.clubgps.bean.HistoryListViewLine;
+
+import java.util.List;
 
 /**
  * Created by Frankie on 2017/1/6.
@@ -22,11 +22,9 @@ public class HistoryListView extends View {
 
     private Context mContext;
     private String bgColor = "#2b2b34";
-    private int gradientStartColor = 0xfff35566;//线条渐变色
-    private int gradientEndColor = 0Xfff8832e;
 
-    private Paint testPaint;
     private HistoryListViewLine testLine;
+    private HistoryListViewLine testLine2;
 
     private boolean isInited;
 
@@ -51,17 +49,14 @@ public class HistoryListView extends View {
     }
 
     private void init(){
-
-        testPaint = new Paint();
-        Shader mShader = new LinearGradient(50 ,0, 50, 150,new int[] {gradientStartColor, gradientEndColor},null,Shader.TileMode.MIRROR);
-        testPaint.setShader(mShader);
-        testLine = new HistoryListViewLine(0, 0, 50, 150, "haha", "hehe", 10);
+        testLine = new HistoryListViewLine(0, 0, 30, 8, "haha", "hehe");
+        testLine2 = new HistoryListViewLine(60, 0, 30, 16, "haha", "hehe");
 
         setBackgroundColor(Color.parseColor(bgColor));
         isInited = true;
     }
 
-    public void setShowType(int showType) {
+    public void setShowType(int showType, int count, List<HistoryDetail> datas) {
         this.showType = showType;
     }
 
@@ -69,7 +64,8 @@ public class HistoryListView extends View {
     protected void onDraw(Canvas canvas) {
         if(!isInited) return;
         super.onDraw(canvas);
-        testLine.draw(canvas, testPaint);
+        testLine.draw(canvas);
+        testLine2.draw(canvas);
     }
 
 }

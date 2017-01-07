@@ -8,6 +8,8 @@
         <mapping class="com.codoon.clubgps.bean.GPSPoint"></mapping>
         <mapping class="com.codoon.clubgps.bean.HistoryDetail"></mapping>
         <mapping class="com.codoon.clubgps.bean.HistoryGPSPoint"></mapping>
+        <mapping class="com.codoon.clubgps.bean.HistoryCount"></mapping>
+        <mapping class="com.codoon.clubgps.bean.HistoryCountRelation"></mapping>
 
     </list>
 

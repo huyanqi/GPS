@@ -98,7 +98,6 @@ public class GPSService extends Service implements AMapLocationListener, TraceLi
             mTraceLocationList.add(new TraceLocation(aMapLocation.getLongitude(), aMapLocation.getLatitude(), 0, 0, aMapLocation.getTime()));
             if(mTraceLocationList.size() > 30)
                 mTraceClient.queryProcessedTrace(1, mTraceLocationList, LBSTraceClient.TYPE_AMAP, this);
-            System.out.println("点数:"+mTraceLocationList.size());
 
             if (lastGPSPoint == null) {
                 //跑步开始

@@ -1,7 +1,9 @@
 package com.codoon.clubgps.bean;
 
 import android.graphics.Canvas;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
+import android.graphics.Shader;
 
 /**
  * Created by Frankie on 2017/1/6.
@@ -15,25 +17,33 @@ public class HistoryListViewLine {
     private int height;//线条的高度
     private String topText;//顶部显示的文本
     private String bottomText;//底部显示的文本
-    private int marginLeft;//左对齐距离
 
     private int x;
     private int y;
 
-    private HistoryListViewLine(){}
+    private int gradientStartColor = 0Xfff8832e;//线条渐变色
+    private int gradientEndColor = 0xfff35566;
+    private Shader mShader;
+    private Paint gradientPaint;
 
-    public HistoryListViewLine (int x, int y, int width, int height, String topText, String bottomText, int marginLeft) {
+    private HistoryListViewLine(){}
+    public HistoryListViewLine (int x, int y, int width, int height, String topText, String bottomText) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.topText = topText;
         this.bottomText = bottomText;
-        this.marginLeft = marginLeft;
+        gradientPaint = new Paint();
+        mShader = new LinearGradient(width ,0, width, height,new int[] {gradientStartColor, gradientEndColor},null,Shader.TileMode.MIRROR);
+        gradientPaint.setShader(mShader);
+        //gradientPaint.setShadowLayer(10, 10, 10, );
+        gradientPaint.setAntiAlias(true);
     }
 
-    public void draw(Canvas canvas, Paint linePaint){
-        canvas.drawRect(x , y, x + width, y + height, linePaint);
+    public void draw(Canvas canvas){
+
+        canvas.drawRect(x , y, x + width, y + height, gradientPaint);
     }
 
 }

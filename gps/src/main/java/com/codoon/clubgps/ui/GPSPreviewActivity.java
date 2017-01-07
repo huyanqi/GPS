@@ -23,6 +23,7 @@ import com.amap.api.maps.model.PolylineOptions;
 import com.codoon.clubgps.R;
 import com.codoon.clubgps.application.GPSApplication;
 import com.codoon.clubgps.bean.GPSPoint;
+import com.codoon.clubgps.bean.HistoryCount;
 import com.codoon.clubgps.bean.HistoryDetail;
 import com.codoon.clubgps.util.CommonUtil;
 import com.codoon.clubgps.util.DialogUtil;
@@ -96,6 +97,8 @@ public class GPSPreviewActivity extends FragmentActivity implements View.OnClick
     private TextView durationTv;
     private TextView avgPaceTv;
 
+    private Intent intent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,7 +123,7 @@ public class GPSPreviewActivity extends FragmentActivity implements View.OnClick
     }
 
     private void showData(){
-        Intent intent = getIntent();
+        intent = getIntent();
         distanceTv.setText(CommonUtil.format2(intent.getDoubleExtra("distance", 0) / 1000));
         durationTv.setText(CommonUtil.getPeriodTime(intent.getIntExtra("runTime", 0)));
         avgPaceTv.setText(CommonUtil.getPaceTimeStr(intent.getLongExtra("avgPace", 0)));
@@ -211,14 +214,17 @@ public class GPSPreviewActivity extends FragmentActivity implements View.OnClick
 
             @Override
             public void onMapScreenShot(Bitmap bitmap, int i) {
-                HistoryDetail recordDetail = new HistoryDetail().build(bitmap, gpsPointsList);
+                HistoryDetail recordDetail = new HistoryDetail().build(bitmap, intent.getIntExtra("runTime", 0), intent.getIntExtra("avgPace", 0), gpsPointsList);
                 //保存运动记录
                 recordDetail.save();
 
                 //保存路线点
                 DataSupport.saveAll(recordDetail.getRecordGPSPointList());
 
-                //清空数据库
+                //添加到统计
+                HistoryCount.add2Count(recordDetail);
+
+                //清空临时存点的数据库
                 DataSupport.deleteAll(GPSPoint.class);
                 //通知上一个界面退出,并退出当前界面
                 setResult(RESULT_OK);

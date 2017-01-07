@@ -9,6 +9,9 @@ import com.codoon.clubgps.R;
 
 /**
  * Created by Frankie on 2017/1/6.
+ *
+ * 主要任务：
+ *      将生成的统计，传给HistoryListView
  */
 
 public class HistoryListGroupView extends LinearLayout {

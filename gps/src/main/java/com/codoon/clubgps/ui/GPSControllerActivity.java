@@ -126,6 +126,7 @@ public class GPSControllerActivity extends AppCompatActivity implements GPSServi
             //已有运动记录产生
             //先保存还未保存的点
             savePoints2DB(mGPSPoints);
+            mGPSPoints.clear();
             //跳转
             GPSPreviewActivity.start(GPSControllerActivity.this, 1024, runDistance, runTime, avgPace);
         } else {
