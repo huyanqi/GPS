@@ -8,8 +8,6 @@ import com.codoon.clubgps.util.FileUtil;
 import org.litepal.annotation.Column;
 import org.litepal.crud.DataSupport;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -68,11 +66,7 @@ public class HistoryDetail extends DataSupport {
             total_calories += gpsPoint.getCalories();
         }
 
-        try {
-            startTimesStamp = new SimpleDateFormat("yyyy-M-dd").parse("2017-1-7").getTime();//gpsPointList.get(0).getTimestamp();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        startTimesStamp = gpsPointList.get(0).getTimestamp();
         saveTimesStamp = System.currentTimeMillis();
         int size = gpsPointList.size();
         avg_speed = speed / size;

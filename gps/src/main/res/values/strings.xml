@@ -38,4 +38,15 @@
 
     <string name="time_currentmonth">本月</string>
 
+    <string name="week_1">周一</string>
+    <string name="week_2">周二</string>
+    <string name="week_3">周三</string>
+    <string name="week_4">周四</string>
+    <string name="week_5">周五</string>
+    <string name="week_6">周六</string>
+    <string name="week_7">周日</string>
+
+    <string name="current_week">本周</string>
+    <string name="current_month">本月</string>
+
 </resources>

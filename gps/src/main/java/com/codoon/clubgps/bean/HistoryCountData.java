@@ -32,6 +32,10 @@ public class HistoryCountData extends DataSupport {
         return total_length;
     }
 
+    public String getTime() {
+        return time;
+    }
+
     /**
      * 更新总长度
      * @param newLength

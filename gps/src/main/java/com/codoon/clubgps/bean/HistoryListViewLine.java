@@ -19,26 +19,29 @@ public class HistoryListViewLine {
 
     private int width;//线条的宽度
     private int height;//线条的高度
-    private String topText;//顶部显示的文本
-    private String bottomText;//底部显示的文本
+    private String topText = "";//顶部显示的文本
+    private String bottomText = "";//底部显示的文本
 
-    private int x;
-    private int y;
+    private String timeTag;//标记具体哪一天，格式:yyyyMMdd
+
+    private float x;
+    private float y;
     private int chatRectBottom;
 
-    private int gradientStartColor = 0xfff35566;//线条渐变色
-    private int gradientEndColor = 0Xfff8832e;
+    private int gradientStartColor = 0Xfff8832e;//线条渐变色
+    private int gradientEndColor = 0xfff35566;
     private Shader mShader;
 
+    private Paint topTextPaint;
     private Paint bottomTextPaint;
     private Paint gradientPaint;
 
     private HistoryListViewLine(){}
-    public HistoryListViewLine (int x, int width, String topText, String bottomText) {
+    public HistoryListViewLine (int x, int width, String timeTag, int chatRectBottom) {
         this.x = x;
         this.width = width;
-        this.topText = topText;
-        this.bottomText = bottomText;
+        this.timeTag = timeTag;
+        this.chatRectBottom = chatRectBottom;
         gradientPaint = new Paint();
         //gradientPaint.setShadowLayer(10, 10, 10, );
         gradientPaint.setAntiAlias(true);
@@ -46,16 +49,39 @@ public class HistoryListViewLine {
         bottomTextPaint = new Paint();
         bottomTextPaint.setAntiAlias(true);
         bottomTextPaint.setColor(Color.BLUE);
-        bottomTextPaint.setTextSize(CommonUtil.dip2px(GPSApplication.getContext(), 11));
+        bottomTextPaint.setTextSize(CommonUtil.dip2px(GPSApplication.getContext(), 12));
         bottomTextPaint.setTextAlign(Paint.Align.CENTER);
+
+        topTextPaint = new Paint();
+        topTextPaint.setAntiAlias(true);
+        topTextPaint.setColor(gradientStartColor);
+        topTextPaint.setTextSize(CommonUtil.dip2px(GPSApplication.getContext(), 10));
+        topTextPaint.setTextAlign(Paint.Align.CENTER);
     }
 
-    public void updateHeight(int chatRectBottom, int height){
-        this.chatRectBottom = chatRectBottom;
+    public void updateHeight(int height){
         y = chatRectBottom - height;
         this.height = height;
-        mShader = new LinearGradient(width ,0, width, height, new int[] {gradientStartColor, gradientEndColor},null,Shader.TileMode.MIRROR);
+        mShader = new LinearGradient(width , y, width, y + height, gradientStartColor, gradientEndColor, Shader.TileMode.MIRROR);
         gradientPaint.setShader(mShader);
+    }
+
+    public void updateWidth(int width){
+        this.width = width;
+        mShader = new LinearGradient(width , y, width, y + height, gradientStartColor, gradientEndColor, Shader.TileMode.MIRROR);
+        gradientPaint.setShader(mShader);
+    }
+
+    public void setTopText(String topText) {
+        this.topText = topText;
+    }
+
+    public void setBottomText(String bottomText) {
+        this.bottomText = bottomText;
+    }
+
+    public String getTimeTag() {
+        return timeTag;
     }
 
     public void draw(Canvas canvas){
@@ -64,6 +90,9 @@ public class HistoryListViewLine {
 
         //2.画底部文字
         canvas.drawText(bottomText, x + width / 2 , chatRectBottom + CommonUtil.dip2px(GPSApplication.getContext(), 16), bottomTextPaint);
+
+        //3.画顶部文字
+        canvas.drawText(topText, x + width / 2 , y - CommonUtil.dip2px(GPSApplication.getContext(), 5), topTextPaint);
     }
 
 }

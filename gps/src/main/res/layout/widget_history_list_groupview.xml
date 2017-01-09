@@ -40,7 +40,7 @@
         </LinearLayout>
 
         <RadioGroup
-            android:id="@+id/radioGroupTab"
+            android:id="@+id/radio_group_rg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -55,6 +55,7 @@
                 android:gravity="center"
                 android:text="@string/date_week"
                 android:textSize="12sp"
+                android:checked="true"
                 android:layout_height="26.5dp" />
 
             <RadioButton
@@ -62,7 +63,6 @@
                 android:background="@drawable/bg_coner_right_check_drawable"
                 android:button="@null"
                 android:gravity="center"
-                android:checked="true"
                 android:text="@string/date_month"
                 android:textSize="12sp"
                 android:layout_width="60dp"
@@ -71,12 +71,23 @@
 
     </RelativeLayout>
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/week_view_pager"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="220dp"
-        android:background="#04aeda">
+        android:layout_height="wrap_content">
+        <android.support.v4.view.ViewPager
+            android:id="@+id/week_view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="220dp">
 
-    </android.support.v4.view.ViewPager>
+        </android.support.v4.view.ViewPager>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/month_view_pager"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:layout_height="220dp">
+
+        </android.support.v4.view.ViewPager>
+    </FrameLayout>
 
 </LinearLayout>
