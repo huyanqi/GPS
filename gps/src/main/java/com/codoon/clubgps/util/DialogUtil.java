@@ -3,6 +3,7 @@ package com.codoon.clubgps.util;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.PixelFormat;
 import android.support.v7.app.AlertDialog;
 import android.view.WindowManager;
 
@@ -51,7 +52,8 @@ public class DialogUtil {
         dialog.show();
 
         WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
-        params.width = CommonUtil.dip2px(mContext, 300);
+        params.width = CommonUtil.dip2px(300);
+        params.format = PixelFormat.TRANSLUCENT;
         dialog.getWindow().setAttributes(params);
 
         return dialog;

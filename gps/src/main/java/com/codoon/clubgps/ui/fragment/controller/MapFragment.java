@@ -1,4 +1,4 @@
-package com.codoon.clubgps.ui.fragment;
+package com.codoon.clubgps.ui.fragment.controller;
 
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -110,7 +110,7 @@ public class MapFragment extends com.amap.api.maps.MapFragment implements View.O
         }
 
         mAMap.addPolyline(new PolylineOptions().addAll(latLngList).geodesic(true).width(16).color(lineColor));
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(builder.build(), screenWidth, screenHeight, CommonUtil.dip2px(this.getActivity(), 60));
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(builder.build(), screenWidth, screenHeight, CommonUtil.dip2px(60));
         mAMap.animateCamera(cameraUpdate);
     }
 
@@ -273,7 +273,7 @@ public class MapFragment extends com.amap.api.maps.MapFragment implements View.O
         MarkerOptions markerOption = new MarkerOptions();
         markerOption.position(latlng);
         markerOption.anchor(0.5f, 0.5f);
-        markerOption.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_start));
+        markerOption.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_gps_start));
         mAMap.addMarker(markerOption);
     }
 
@@ -333,7 +333,7 @@ public class MapFragment extends com.amap.api.maps.MapFragment implements View.O
      */
     private void moveToCenter(){
         if(mPointSize < 2) return;
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(builder.build(), screenWidth, screenHeight, CommonUtil.dip2px(this.getActivity(), 60));
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(builder.build(), screenWidth, screenHeight, CommonUtil.dip2px(60));
         mAMap.animateCamera(cameraUpdate, 500, null);
     }
 

@@ -1,8 +1,6 @@
 package com.codoon.clubgps.util;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -13,6 +11,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
 import com.codoon.clubgps.R;
+import com.codoon.clubgps.application.GPSApplication;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,23 +86,18 @@ public class PermissionUtils {
      * 弹出重新授权的提示框
      */
     public void showTips(final int request_code){
-        AlertDialog.Builder builder = new AlertDialog.Builder(mActivity, R.style.dialog);
-        builder.setMessage(R.string.permisson_rejected);
-        builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+
+        new DialogUtil(mActivity).createAlertDialog(GPSApplication.getContext().getString(R.string.permisson_rejected), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 startAppSettings(request_code);
             }
-        });
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+        }, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 mActivity.finish();
             }
-        });
-        Dialog dialog = builder.create();
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.show();
+        }).show();
     }
 
     private void startAppSettings(int request_code) {

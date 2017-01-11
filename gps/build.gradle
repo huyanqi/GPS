@@ -33,11 +33,12 @@ dependencies {
     compile "com.android.support:appcompat-v7:${supportLibVersion}"
     compile "com.android.support:support-v4:${supportLibVersion}"
     compile "com.android.support:recyclerview-v7:${supportLibVersion}"
-    testCompile "junit:junit:4.12"
-    compile "com.orhanobut:logger:1.15"
-    compile "org.litepal.android:core:1.4.1"
     compile files("libs/AMap3DMap_4.1.3_AMapLocation_3.2.1_20161228.jar")
-    compile "com.tencent.bugly:crashreport:latest.release"
+    compile 'com.orhanobut:logger:1.15'
+    compile 'org.litepal.android:core:1.4.1'
+    compile 'com.tencent.bugly:crashreport:latest.release'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
     compile 'com.facebook.fresco:fresco:1.0.0'
+    compile 'com.android.support:support-v4:25.1.0'
+    testCompile 'junit:junit:4.12'
 }

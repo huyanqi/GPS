@@ -28,4 +28,6 @@ public class ImageLoadUtil {
         imageView.setImageURI(Uri.parse(url));
     }
 
+
+
 }

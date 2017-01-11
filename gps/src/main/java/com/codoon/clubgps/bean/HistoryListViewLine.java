@@ -6,7 +6,6 @@ import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Shader;
 
-import com.codoon.clubgps.application.GPSApplication;
 import com.codoon.clubgps.util.CommonUtil;
 
 /**
@@ -49,13 +48,13 @@ public class HistoryListViewLine {
         bottomTextPaint = new Paint();
         bottomTextPaint.setAntiAlias(true);
         bottomTextPaint.setColor(Color.BLUE);
-        bottomTextPaint.setTextSize(CommonUtil.dip2px(GPSApplication.getContext(), 12));
+        bottomTextPaint.setTextSize(CommonUtil.dip2px(12));
         bottomTextPaint.setTextAlign(Paint.Align.CENTER);
 
         topTextPaint = new Paint();
         topTextPaint.setAntiAlias(true);
         topTextPaint.setColor(gradientStartColor);
-        topTextPaint.setTextSize(CommonUtil.dip2px(GPSApplication.getContext(), 10));
+        topTextPaint.setTextSize(CommonUtil.dip2px(10));
         topTextPaint.setTextAlign(Paint.Align.CENTER);
     }
 
@@ -89,10 +88,10 @@ public class HistoryListViewLine {
         canvas.drawRect(x , y, x + width, y + height, gradientPaint);
 
         //2.画底部文字
-        canvas.drawText(bottomText, x + width / 2 , chatRectBottom + CommonUtil.dip2px(GPSApplication.getContext(), 16), bottomTextPaint);
+        canvas.drawText(bottomText, x + width / 2 , chatRectBottom + CommonUtil.dip2px(16), bottomTextPaint);
 
         //3.画顶部文字
-        canvas.drawText(topText, x + width / 2 , y - CommonUtil.dip2px(GPSApplication.getContext(), 5), topTextPaint);
+        canvas.drawText(topText, x + width / 2 , y - CommonUtil.dip2px(5), topTextPaint);
     }
 
 }

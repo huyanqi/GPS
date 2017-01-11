@@ -2,5 +2,21 @@
 <resources>
 
     <color name="gps_line">#04aeda</color>
+    <color name="white">#FFFFFF</color>
+
+    <!--浅白色-->
+    <color name="light_white">#79798E</color>
+
+    <!--浅黑色-->
+    <color name="light_dark">#494958</color>
+
+    <!--灰色背景-->
+    <color name="bg_color_grey">#2B2B34</color>
+
+    <!--灰色背景 带透明-->
+    <color name="bg_color_grey_trans">#F22B2B34</color>
+
+    <!--橙色-->
+    <color name="orange">#FA8825</color>
 
 </resources>

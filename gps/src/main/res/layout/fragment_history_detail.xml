@@ -1,0 +1,202 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context="com.codoon.clubgps.ui.fragment.history.HistoryDetailFragment">
+
+    <com.amap.api.maps.MapView
+        android:id="@+id/map_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <RelativeLayout
+        android:id="@+id/content_ly"
+        android:layout_width="match_parent"
+        android:visibility="invisible"
+        android:layout_height="match_parent">
+
+        <ImageButton
+            android:id="@+id/close_view"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@null"
+            android:src="@drawable/btn_close_selector"/>
+
+        <TextView
+            android:id="@+id/time_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignTop="@id/close_view"
+            android:padding="10dp"
+            android:textColor="@color/white"
+            android:textSize="19sp"
+            android:textStyle="bold"
+            android:text="运动记录时间"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/bg_map_mask"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/distance_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0.00"
+                    android:textColor="@color/white"
+                    android:textSize="45sp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/distance_tv"
+                    android:layout_toRightOf="@id/distance_tv"
+                    android:text="@string/kilometers"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/duration_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/distance_tv"
+                    android:layout_alignParentRight="true"
+                    android:text="00:00:00"
+                    android:textSize="35sp"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"/>
+
+            </RelativeLayout>
+
+            <View
+                style="@style/line_h"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/speed_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="29sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/white"
+                        android:text="0.0"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:textSize="10sp"
+                        android:layout_toRightOf="@id/speed_tv"
+                        android:layout_alignBottom="@id/speed_tv"
+                        android:text="@string/unit_speed"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:textSize="10sp"
+                        android:layout_marginTop="3dp"
+                        android:layout_below="@id/speed_tv"
+                        android:text="@string/speed"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="20dp"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/pace_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="29sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/white"
+                        android:text="00'0''"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:textSize="10sp"
+                        android:layout_toRightOf="@id/pace_tv"
+                        android:layout_alignBottom="@id/pace_tv"
+                        android:text="@string/kilometers"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:textSize="10sp"
+                        android:layout_marginTop="3dp"
+                        android:layout_below="@id/pace_tv"
+                        android:text="@string/pace"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="20dp"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/calories_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="29sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/white"
+                        android:text="0"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:textSize="10sp"
+                        android:layout_toRightOf="@id/calories_tv"
+                        android:layout_alignBottom="@id/calories_tv"
+                        android:text="@string/unit_calories"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:textSize="10sp"
+                        android:layout_marginTop="3dp"
+                        android:layout_below="@id/calories_tv"
+                        android:text="@string/calories"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+</FrameLayout>

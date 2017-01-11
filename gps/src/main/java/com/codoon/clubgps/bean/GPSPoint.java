@@ -27,6 +27,7 @@ public class GPSPoint extends DataSupport {
     private double latitude;//纬度
     private double longitude;//经度
 
+    private double total_length;//总跑步距离
     private double distance;//距离上一个坐标点的距离,单位:m
     private long pace;//当前配速,单位:s
 
@@ -70,6 +71,8 @@ public class GPSPoint extends DataSupport {
             //有效的点
             if(is_valid){
                 index++;
+                //计算离起点的距离
+                total_length = distance + lastGPSPoint.total_length;
                 //计算配速
                 LogUtil.i(TAG, "distance="+distance+",计算配速:1000/"+Math.round(distance)+"*"+duration);
                 pace = (long) ((1000d / distance) * duration);
@@ -145,6 +148,10 @@ public class GPSPoint extends DataSupport {
 
     public double getCalories() {
         return calories;
+    }
+
+    public double getTotal_length() {
+        return total_length;
     }
 
     /**

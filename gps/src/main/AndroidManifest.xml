@@ -60,6 +60,8 @@
         </activity>
         <activity android:name=".ui.HistoryListActivity">
         </activity>
+        <activity android:name=".ui.HistoryDetailActivity">
+        </activity>
     </application>
 
 </manifest>

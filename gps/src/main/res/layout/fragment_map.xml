@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.codoon.clubgps.ui.fragment.ControllerFragment">
+    tools:context="com.codoon.clubgps.ui.fragment.controller.ControllerFragment">
 
     <FrameLayout
         android:id="@+id/map_fragment_ly"

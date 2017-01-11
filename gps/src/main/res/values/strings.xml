@@ -19,6 +19,9 @@
     <string name="kilometers">公里</string>
     <string name="duration">耗时</string>
     <string name="avg_pace">平均配速</string>
+    <string name="pace">配速</string>
+    <string name="speed">速度</string>
+    <string name="calories">卡路里</string>
 
     <string name="gps_no_signal_tips">我们正在使用手机传感器来记录您的跑步数据\n\n由于没有GPS信号，您在该路段的路线不能在地图上绘出\n\n请到开阔的室外试试，或检查手机设置确保GPS已开启</string>
     <string name="gps_weak_signal_tips">我们正在使用手机传感器来记录您的跑步数据\n\n由于GPS信号弱，您在该路段的路线不能在地图上绘出\n\n请到开阔的室外试试，或检查手机设置确保GPS已开启</string>
@@ -48,5 +51,20 @@
 
     <string name="current_week">本周</string>
     <string name="current_month">本月</string>
+
+    <string name="unit_speed">公里/时</string>
+    <string name="unit_calories">千卡</string>
+
+    <string name="low">慢</string>
+    <string name="fast">快</string>
+
+    <string name="hello_blank_fragment">临时存在的string""</string>
+
+    <string-array name="detail_tab_titles">
+        <item>轨迹</item>
+        <item>详情</item>
+        <item>配速</item>
+        <item>图表</item>
+    </string-array>
 
 </resources>

@@ -1,0 +1,271 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context="com.codoon.clubgps.ui.fragment.history.HistoryPagerPathFragment">
+
+    <LinearLayout
+        android:id="@+id/bottom_ly"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:padding="10dp"
+        android:orientation="vertical"
+        android:background="@color/bg_color_grey_trans">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+
+            <TextView
+                android:id="@+id/user_nick_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="@color/white"
+                android:text="用户的名称"/>
+
+            <TextView
+                android:id="@+id/time_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="@color/light_white"
+                android:layout_below="@id/user_nick_tv"
+                android:layout_marginTop="5dp"
+                android:text="记录产生时间"/>
+
+            <TextView
+                android:id="@+id/distance_unit_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:textColor="@color/light_white"
+                android:textSize="16sp"
+                android:layout_alignBottom="@id/time_tv"
+                android:text="@string/kilometers"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="40sp"
+                android:layout_marginRight="3dp"
+                android:layout_toLeftOf="@id/distance_unit_tv"
+                android:layout_alignBottom="@id/distance_unit_tv"
+                android:text="0.00"/>
+
+        </RelativeLayout>
+
+        <View
+            style="@style/line_h"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="center_horizontal|bottom">
+
+                <TextView
+                    android:id="@+id/speed_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="29sp"
+                    android:textColor="@color/light_white"
+                    android:text="0.0"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/light_dark"
+                    android:layout_marginTop="5dp"
+                    android:textSize="10sp"
+                    android:layout_toRightOf="@id/speed_tv"
+                    android:layout_alignBottom="@id/speed_tv"
+                    android:text="@string/unit_speed"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/duration_tv"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:textSize="29sp"
+                android:textColor="@color/light_white"
+                android:text="00:00:00"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="center_horizontal|bottom">
+
+                <TextView
+                    android:id="@+id/calories_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="29sp"
+                    android:textColor="@color/light_white"
+                    android:text="0"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/light_dark"
+                    android:layout_marginTop="5dp"
+                    android:textSize="10sp"
+                    android:layout_toRightOf="@id/speed_tv"
+                    android:layout_alignBottom="@id/speed_tv"
+                    android:text="@string/unit_calories"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/light_dark"
+                android:text="@string/unit_speed"
+                android:textSize="10sp"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/light_dark"
+                android:text="@string/duration"
+                android:textSize="10sp"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/light_dark"
+                android:text="@string/calories"
+                android:textSize="10sp"/>
+
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:scaleType="fitXY"
+            android:src="@mipmap/ic_pace_line"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="10sp"
+                android:textColor="@color/light_white"
+                android:text="@string/low"/>
+
+            <TextView
+                android:id="@+id/avg_pace_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="10sp"
+                android:textColor="@color/light_white"
+                android:text="@string/low"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="10sp"
+                android:textColor="@color/light_white"
+                android:layout_alignParentRight="true"
+                android:text="@string/fast"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_above="@id/bottom_ly">
+
+        <View
+            android:id="@+id/map_holder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <View
+            android:id="@+id/holder_view"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/bg_color_grey_trans"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="25dp"
+            android:text="这里是LOGO"/>
+
+        <CheckBox
+            android:id="@+id/map_visible_cb"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:button="@null"
+            android:layout_alignParentRight="true"
+            android:layout_above="@id/holder_view"
+            android:layout_marginRight="12dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/btn_mapvisible_selector"/>
+
+        <CheckBox
+            android:id="@+id/mil_cb"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:button="@null"
+            android:layout_above="@id/map_visible_cb"
+            android:layout_alignLeft="@id/map_visible_cb"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/btn_mapmile_selector"/>
+
+        <com.codoon.clubgps.widget.CImageView
+            android:id="@+id/avatar_iv"
+            android:layout_width="@dimen/icon_normal"
+            android:layout_height="@dimen/icon_normal"
+            android:layout_alignBottom="@id/holder_view"
+            android:layout_marginLeft="20dp"
+            android:background="#04aeda"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

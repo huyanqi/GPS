@@ -2,9 +2,11 @@ package com.codoon.clubgps.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.codoon.clubgps.R;
+import com.codoon.clubgps.adapter.listener.OnItemClickListener;
 import com.codoon.clubgps.adapter.vh.HistoryListHolder;
 import com.codoon.clubgps.application.GPSApplication;
 import com.codoon.clubgps.bean.HistoryListBean;
@@ -26,8 +28,11 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListHolder> 
 
     private int HEADER_COUNT = 1;
 
-    public HistoryListAdapter(List<HistoryListBean> list) {
+    private OnItemClickListener mOnItemClickListener;
+
+    public HistoryListAdapter(List<HistoryListBean> list, OnItemClickListener onItemClickListener) {
         this.mList = list;
+        this.mOnItemClickListener = onItemClickListener;
         mLayoutInflater = LayoutInflater.from(GPSApplication.getContext());
     }
 
@@ -49,11 +54,19 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListHolder> 
             //更新header
 
         } else {
-            HistoryListBean historyBean = mList.get(getRealPosition(position));
+            final int finalPosition = getRealPosition(position);
+            HistoryListBean historyBean = mList.get(finalPosition);
             if(viewType == TYPE_TAG){
                 holder.updateTag(historyBean.month, historyBean.distance);
+                holder.itemView.setOnClickListener(null);
             }else{
                 holder.updateView(historyBean.historyDetail);
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mOnItemClickListener.OnItemClicked(finalPosition);
+                    }
+                });
             }
         }
     }
@@ -76,4 +89,9 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListHolder> 
             return TYPE_TAG;
         return TYPE_ITEM;
     }
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        mOnItemClickListener = onItemClickListener;
+    }
+
 }

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_checked="true" android:state_pressed="false" android:drawable="@mipmap/ic_map_switch_km"/>
+    <item android:state_checked="true" android:state_pressed="true" android:drawable="@mipmap/ic_map_switch_km"/>
+    <item android:state_checked="false" android:state_pressed="false" android:drawable="@mipmap/ic_map_switch_km_off"/>
+    <item android:state_checked="false" android:state_pressed="true" android:drawable="@mipmap/ic_map_switch_km_off"/>
+</selector>

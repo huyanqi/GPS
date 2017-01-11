@@ -6,20 +6,14 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.TextView;
 
 import com.amap.api.maps.AMap;
-import com.amap.api.maps.CameraUpdate;
-import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.UiSettings;
-import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.LatLngBounds;
-import com.amap.api.maps.model.MarkerOptions;
-import com.amap.api.maps.model.PolylineOptions;
 import com.codoon.clubgps.R;
 import com.codoon.clubgps.application.GPSApplication;
 import com.codoon.clubgps.bean.GPSPoint;
@@ -64,29 +58,12 @@ public class GPSPreviewActivity extends FragmentActivity implements View.OnClick
         uiSettings.setLogoBottomMargin(-50);
         //4.获取本地跑步所有路线点
         gpsPointsList = GPSPoint.getValidDatas();
-        List<LatLng> latLngs = new ArrayList<LatLng>();
-        LatLng latLng;
+        List<LatLng> latLngList = new ArrayList<>();
         for(GPSPoint gpsPoint : gpsPointsList){
-            latLng = new LatLng(gpsPoint.getLatitude(), gpsPoint.getLongitude());
-            mBuilder.include(latLng);
-            latLngs.add(latLng);
+            latLngList.add(new LatLng(gpsPoint.getLatitude(), gpsPoint.getLongitude()));
         }
 
-        //画起点
-        MarkerOptions markerOption = new MarkerOptions();
-        markerOption.position(latLngs.get(0));
-        markerOption.anchor(0.5f, 0.5f);
-        markerOption.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_start));
-        mAMap.addMarker(markerOption);
-
-        //将路线画到地图上
-        mAMap.addPolyline(new PolylineOptions().addAll(latLngs).geodesic(true).width(16).color(ContextCompat.getColor(GPSApplication.getAppContext(), R.color.gps_line)));
-        //4.移动地图
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(mBuilder.build(),
-                CommonUtil.getScreenWidth(GPSApplication.getAppContext()),
-                CommonUtil.dip2px(this, 180),//CommonUtil.getScreenHeight(GPSApplication.getAppContext()
-                CommonUtil.dip2px(this, 15));
-        mAMap.animateCamera(cameraUpdate, 500, null);
+        CommonUtil.drawLineOnMap(latLngList, mAMap, CommonUtil.getScreenWidth(GPSApplication.getAppContext()), CommonUtil.dip2px(180), CommonUtil.dip2px(30), 500, mBuilder);
     }
 
     private MapView mMapView;

@@ -1,4 +1,4 @@
-package com.codoon.clubgps.ui.fragment;
+package com.codoon.clubgps.ui.fragment.controller;
 
 import android.app.Fragment;
 import android.os.Bundle;

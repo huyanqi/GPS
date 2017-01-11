@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <litepal>
-    <version value="2" ></version>
+    <version value="1" ></version>
     <dbname value="club_codoon_gps" ></dbname>
 
     <list>

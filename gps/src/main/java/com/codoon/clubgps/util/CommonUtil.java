@@ -1,8 +1,17 @@
 package com.codoon.clubgps.util;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 
+import com.amap.api.maps.AMap;
+import com.amap.api.maps.CameraUpdate;
+import com.amap.api.maps.CameraUpdateFactory;
+import com.amap.api.maps.model.BitmapDescriptorFactory;
+import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.LatLngBounds;
+import com.amap.api.maps.model.MarkerOptions;
+import com.amap.api.maps.model.PolylineOptions;
 import com.codoon.clubgps.R;
 import com.codoon.clubgps.application.GPSApplication;
 
@@ -10,8 +19,10 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by huan on 15/5/27.
@@ -57,11 +68,8 @@ public class CommonUtil {
      * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
      */
 
-    public static int dip2px(Context context, float dipValue) {
-        if (context == null) {
-            return 1;
-        }
-        float scale = getDisplayMetrics(context).density;
+    public static int dip2px(float dipValue) {
+        float scale = getDisplayMetrics(GPSApplication.getContext()).density;
         return (int) (dipValue * scale + 0.5f);
     }
 
@@ -249,5 +257,65 @@ public class CommonUtil {
         int maxDate = a.get(Calendar.DATE);
         return maxDate;
     }
+
+    /**
+     * 获取数字的第一个字
+     * @param number
+     * @return
+     */
+    public static int getFirstNumber(double number){
+        return Integer.parseInt(String.valueOf(number).substring(0, 1));
+    }
+
+    /**
+     * 把路线画到地图中并且显示到界面中间
+     * @param latLngList
+     * @param aMap
+     * @param width
+     * @param height
+     * @param padding
+     * @param animDuration
+     * @param builder
+     */
+    public static void drawLineOnMap(List<LatLng> latLngList, AMap aMap, int width, int height, int padding, long animDuration, LatLngBounds.Builder builder){
+        for(LatLng latLng : latLngList){
+            builder.include(latLng);
+        }
+
+        //将路线画到地图上
+        aMap.addPolyline(new PolylineOptions().addAll(latLngList).geodesic(true).width(16).color(ContextCompat.getColor(GPSApplication.getAppContext(), R.color.gps_line)));
+
+        ArrayList<MarkerOptions> markers = new ArrayList<>();
+
+        //画起点
+        MarkerOptions startMarkerOption = new MarkerOptions();
+        startMarkerOption.position(latLngList.get(0));
+        startMarkerOption.anchor(0.5f, 0.5f);
+        startMarkerOption.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_gps_start));
+        markers.add(startMarkerOption);
+
+        //画终点
+        MarkerOptions endMarkerOption = new MarkerOptions();
+        endMarkerOption.position(latLngList.get(latLngList.size() - 1));
+        endMarkerOption.anchor(0.5f, 0.5f);
+        endMarkerOption.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_gps_end));
+        markers.add(endMarkerOption);
+
+        aMap.addMarkers(markers, false);
+
+        //4.移动地图
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(builder.build(),
+                width,
+                height,
+                padding);
+
+        if(animDuration == 0){
+            aMap.moveCamera(cameraUpdate);
+        }else{
+            aMap.animateCamera(cameraUpdate, animDuration, null);
+        }
+    }
+
+
 
 }

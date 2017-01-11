@@ -1,5 +1,6 @@
 package com.codoon.clubgps.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -7,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 
 import com.codoon.clubgps.R;
 import com.codoon.clubgps.adapter.HistoryListAdapter;
+import com.codoon.clubgps.adapter.listener.OnItemClickListener;
 import com.codoon.clubgps.bean.HistoryDetail;
 import com.codoon.clubgps.bean.HistoryListBean;
 import com.codoon.clubgps.util.CommonUtil;
@@ -20,7 +22,7 @@ import java.util.List;
  * 运动历史列表
  */
 
-public class HistoryListActivity extends AppCompatActivity {
+public class HistoryListActivity extends AppCompatActivity implements OnItemClickListener {
 
     private RecyclerView mRecyclerView;
     private List<HistoryListBean> mHistoryBeanList;
@@ -36,10 +38,8 @@ public class HistoryListActivity extends AppCompatActivity {
     private void init(){
         mRecyclerView = (RecyclerView) findViewById(R.id.recycle_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.setAdapter(mAdapter = new HistoryListAdapter(mHistoryBeanList = new ArrayList<HistoryListBean>()));
-
+        mRecyclerView.setAdapter(mAdapter = new HistoryListAdapter(mHistoryBeanList = new ArrayList<HistoryListBean>(), this));
         mHistoryBeanList.addAll(getDatas(HistoryDetail.getHistoryList(getIntent().getStringExtra("user_id"))));
-
 
 
     }
@@ -108,6 +108,14 @@ public class HistoryListActivity extends AppCompatActivity {
 
     private String formatTimeStr(String time){
         return time.substring(0, 4)+getString(R.string.date_year)+time.substring(4, time.length())+getString(R.string.date_month);
+    }
+
+    @Override
+    public void OnItemClicked(int position) {
+        HistoryListBean historyListBean = mHistoryBeanList.get(position);
+        Intent intent = new Intent(this, HistoryDetailActivity.class);
+        intent.putExtra("bean", historyListBean.historyDetail);
+        startActivity(intent);
     }
 
 }

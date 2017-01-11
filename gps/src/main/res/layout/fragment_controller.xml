@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradient_sport_bg"
-    tools:context="com.codoon.clubgps.ui.fragment.MapFragment">
+    tools:context="com.codoon.clubgps.ui.fragment.controller.MapFragment">
 
     <ImageView
         android:id="@+id/open_map_iv"

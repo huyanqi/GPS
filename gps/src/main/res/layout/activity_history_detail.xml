@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_history_detail"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.codoon.clubgps.ui.HistoryDetailActivity">
+
+    <fragment
+        android:id="@+id/history_detail_fragment"
+        android:name="com.codoon.clubgps.ui.fragment.history.HistoryDetailFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <LinearLayout
+        android:id="@+id/detail_ly"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.codoon.clubgps.widget.PagerIndicator
+            android:id="@+id/pager_indicator"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/bg_color_grey">
+
+        </com.codoon.clubgps.widget.PagerIndicator>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </android.support.v4.view.ViewPager>
+
+
+    </LinearLayout>
+
+</FrameLayout>

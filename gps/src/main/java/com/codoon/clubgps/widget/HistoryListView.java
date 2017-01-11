@@ -74,7 +74,7 @@ public class HistoryListView extends View {
         super(context);
         this.mContext = context;
         this.mHistoryCount = historyCount;
-        minWidth = CommonUtil.dip2px(context, 8);
+        minWidth = CommonUtil.dip2px(8);
         yyyyMMddFormat = new SimpleDateFormat("yyyyMMdd");
 
         historyCountDataList = mHistoryCount.findChildren();
@@ -153,9 +153,9 @@ public class HistoryListView extends View {
         chatRect = new ChatRect();
 
         //1.获取Rect的范围
-        int left = CommonUtil.dip2px(mContext, rectMarginLRDP);
-        int right = getMeasuredWidth() - CommonUtil.dip2px(mContext, rectMarginLRDP);
-        chatRect.set(left, 0, right, getMeasuredHeight() - CommonUtil.dip2px(mContext, rectMarginBottomDP));
+        int left = CommonUtil.dip2px(rectMarginLRDP);
+        int right = getMeasuredWidth() - CommonUtil.dip2px(rectMarginLRDP);
+        chatRect.set(left, 0, right, getMeasuredHeight() - CommonUtil.dip2px(rectMarginBottomDP));
 
         //2.计算出最大刻度值
         getMaxLength();
@@ -255,7 +255,7 @@ public class HistoryListView extends View {
             ruleTextPaint = new Paint();
             ruleTextPaint.setColor(Color.parseColor(ruleColor));
             ruleTextPaint.setAntiAlias(true);
-            ruleTextPaint.setTextSize(CommonUtil.dip2px(GPSApplication.getContext(), 11));
+            ruleTextPaint.setTextSize(CommonUtil.dip2px(11));
 
             linePaint = new Paint();
             linePaint.setStyle(Paint.Style.STROKE);

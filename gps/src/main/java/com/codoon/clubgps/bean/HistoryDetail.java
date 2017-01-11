@@ -1,6 +1,8 @@
 package com.codoon.clubgps.bean;
 
 import android.graphics.Bitmap;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.codoon.clubgps.application.GPSApplication;
 import com.codoon.clubgps.util.FileUtil;
@@ -18,7 +20,7 @@ import java.util.UUID;
  * 记录运动的详情(不记录路线点)
  */
 
-public class HistoryDetail extends DataSupport {
+public class HistoryDetail extends DataSupport implements Parcelable {
 
     private String uuid;
     private String user_id;
@@ -39,6 +41,35 @@ public class HistoryDetail extends DataSupport {
     @Column(ignore = true)
     private List<HistoryGPSPoint> recordGPSPointList;
 
+    public HistoryDetail(){}
+
+    protected HistoryDetail(Parcel in) {
+        uuid = in.readString();
+        user_id = in.readString();
+        max_pace = in.readLong();
+        avg_pace = in.readLong();
+        max_speed = in.readDouble();
+        avg_speed = in.readDouble();
+        total_length = in.readDouble();
+        total_time = in.readLong();
+        total_calories = in.readDouble();
+        thum = in.readString();
+        startTimesStamp = in.readLong();
+        saveTimesStamp = in.readLong();
+    }
+
+    public static final Creator<HistoryDetail> CREATOR = new Creator<HistoryDetail>() {
+        @Override
+        public HistoryDetail createFromParcel(Parcel in) {
+            return new HistoryDetail(in);
+        }
+
+        @Override
+        public HistoryDetail[] newArray(int size) {
+            return new HistoryDetail[size];
+        }
+    };
+
     /**
      * 生成一个完整的运动记录
      * @param gpsPointList 本次运动所有路线点
@@ -55,8 +86,7 @@ public class HistoryDetail extends DataSupport {
         //遍历所有坐标点设置对象属性
         double speed = 0;//总速度
         for(GPSPoint gpsPoint : gpsPointList){
-            recordGPSPointList.add(new HistoryGPSPoint(gpsPoint));
-            total_length += gpsPoint.getDistance();
+            recordGPSPointList.add(new HistoryGPSPoint(uuid, gpsPoint));
 
             max_pace = gpsPoint.getPace() > max_pace ? gpsPoint.getPace() : max_pace;
 
@@ -66,6 +96,7 @@ public class HistoryDetail extends DataSupport {
             total_calories += gpsPoint.getCalories();
         }
 
+        total_length = gpsPointList.get(gpsPointList.size() - 1).getTotal_length();//取最后一个点的距离为总距离
         startTimesStamp = gpsPointList.get(0).getTimestamp();
         saveTimesStamp = System.currentTimeMillis();
         int size = gpsPointList.size();
@@ -129,6 +160,11 @@ public class HistoryDetail extends DataSupport {
         return list;
     }
 
+    public List<HistoryGPSPoint> findAllGPSPoints(){
+        List<HistoryGPSPoint> list = DataSupport.where("parent_uuid = ?", uuid).order("timestamp ASC").find(HistoryGPSPoint.class);
+        return list;
+    }
+
     @Override
     public String toString() {
         return "HistoryDetail{" +
@@ -144,6 +180,27 @@ public class HistoryDetail extends DataSupport {
                 ", startTimesStamp=" + startTimesStamp +
                 ", saveTimesStamp=" + saveTimesStamp +
                 '}';
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(uuid);
+        dest.writeString(user_id);
+        dest.writeLong(max_pace);
+        dest.writeLong(avg_pace);
+        dest.writeDouble(max_speed);
+        dest.writeDouble(avg_speed);
+        dest.writeDouble(total_length);
+        dest.writeLong(total_time);
+        dest.writeDouble(total_calories);
+        dest.writeString(thum);
+        dest.writeLong(startTimesStamp);
+        dest.writeLong(saveTimesStamp);
     }
 
 }
