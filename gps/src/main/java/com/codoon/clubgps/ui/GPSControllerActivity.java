@@ -84,6 +84,7 @@ public class GPSControllerActivity extends AppCompatActivity implements GPSServi
 
     @Override
     public void onFirstGPSLocation(GPSPoint newGPSPoint) {
+        mGPSPoints.add(newGPSPoint);
         mMapFragment.onFirstLocationSuccess(newGPSPoint);
         mControllerFragment.onFirstLocationSuccess();
         startRun();

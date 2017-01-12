@@ -74,8 +74,8 @@ public class GPSPoint extends DataSupport {
                 //计算离起点的距离
                 total_length = distance + lastGPSPoint.total_length;
                 //计算配速
-                LogUtil.i(TAG, "distance="+distance+",计算配速:1000/"+Math.round(distance)+"*"+duration);
                 pace = (long) ((1000d / distance) * duration);
+                LogUtil.i(TAG, pace+" = (long) ((1000d / "+distance+") * "+duration+");");
 
                 //计算卡路里消耗
                 calories = 65 * (distance / 1000) * 1.036;//暂时写死体重65kg，和K值 K = 30 / 速度(分钟/400米)

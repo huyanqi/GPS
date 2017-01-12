@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="wrap_content"
+                                             android:gravity="center_vertical"
+                                             android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/km_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="50dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="1"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/fast_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
+        android:background="@drawable/ic_details_good"
+        android:gravity="center_vertical"
+        android:text="@string/fast"
+        android:textColor="@color/light_white"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="@+id/duration_ly"
+        app:layout_constraintLeft_toRightOf="@+id/duration_ly"
+        app:layout_constraintTop_toTopOf="@+id/duration_ly"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/km_tag_tv"
+        android:textSize="10sp"
+        android:textColor="#FFC2C2D3"
+        app:layout_constraintTop_toTopOf="@+id/km_tv"
+        app:layout_constraintBottom_toBottomOf="@+id/km_tv"
+        android:layout_marginStart="15dp"
+        app:layout_constraintLeft_toRightOf="@+id/km_tv"
+        android:layout_marginLeft="15dp"/>
+
+    <RelativeLayout
+        android:id="@+id/duration_ly"
+        android:layout_width="wrap_content"
+        android:layout_height="29dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
+        android:background="@drawable/bg_pace_chat"
+        app:layout_constraintBottom_toBottomOf="@+id/km_tv"
+        app:layout_constraintLeft_toRightOf="@+id/km_tv"
+        app:layout_constraintTop_toTopOf="@+id/km_tv">
+
+        <TextView
+            android:id="@+id/pace_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00'00''"
+            android:layout_marginLeft="10dp"
+            android:layout_centerVertical="true"
+            android:textColor="@color/white"/>
+
+    </RelativeLayout>
+
+</android.support.constraint.ConstraintLayout>

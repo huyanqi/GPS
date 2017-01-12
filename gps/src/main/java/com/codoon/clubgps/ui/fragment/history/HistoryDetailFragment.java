@@ -183,14 +183,13 @@ public class HistoryDetailFragment extends Fragment implements AMap.OnMapLoadedL
             Bitmap resIcon = BitmapDescriptorFactory.fromResource(R.mipmap.ic_milestone).getBitmap();
             for(HistoryGPSPoint historyGPSPoint : mHistoryGPSPointList){
                 if(historyGPSPoint.getTotal_length() / 1000 >= currentKm){
-                    System.out.println(historyGPSPoint);
                     //新的marker
                     MarkerOptions kmMarkerOption = new MarkerOptions();
                     kmMarkerOption.position(historyGPSPoint.getLatlng());
                     kmMarkerOption.anchor(0.5f, 0.5f);
-                    int firNum = CommonUtil.getFirstNumber(historyGPSPoint.getTotal_length() / 1000);
-                    kmMarkerOption.icon(BitmapDescriptorFactory.fromBitmap(com.codoon.clubgps.util.BitmapUtil.generatorCountIcon(resIcon, firNum)));
-                    currentKm = firNum + 1;
+                    int kmNum = CommonUtil.getKmNumber(historyGPSPoint.getTotal_length() / 1000);
+                    kmMarkerOption.icon(BitmapDescriptorFactory.fromBitmap(com.codoon.clubgps.util.BitmapUtil.generatorCountIcon(resIcon, kmNum)));
+                    currentKm = kmNum + 1;
                     kmMarkers.add(mAMap.addMarker(kmMarkerOption));
                 }
             }

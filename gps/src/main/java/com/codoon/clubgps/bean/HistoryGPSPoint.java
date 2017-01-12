@@ -57,6 +57,14 @@ public class HistoryGPSPoint extends DataSupport {
         return total_length;
     }
 
+    public long getPace() {
+        return pace;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
     private HistoryGPSPoint(){}
 
     public LatLng getLatlng(){

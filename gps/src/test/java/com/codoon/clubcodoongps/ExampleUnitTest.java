@@ -13,7 +13,8 @@ import java.util.Date;
 public class ExampleUnitTest {
     @Test
     public void testgogogo() throws Exception {
-        System.out.println(Math.rint(1.4));
+        double number = 1.6;
+        System.out.println((int)number);
     }
 
     @Test

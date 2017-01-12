@@ -64,7 +64,7 @@ public class HistoryDetailActivity extends FragmentActivity {
         mFragmentList = new ArrayList<>();
         mFragmentList.add(mHistoryPagerPathFragment = new HistoryPagerPathFragment());
         mFragmentList.add(new HistoryPagerDetailFragment());
-        mFragmentList.add(new HistoryPagerPaceFragment());
+        mFragmentList.add(HistoryPagerPaceFragment.newInstance(mHistoryDetail));
         mFragmentList.add(new HistoryPagerChatFragment());
         mPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager(), mFragmentList);
 

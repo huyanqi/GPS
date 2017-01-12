@@ -1,14 +1,203 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:background="@color/bg_color_grey"
-             tools:context="com.codoon.clubgps.ui.fragment.history.HistoryPagerDetailFragment">
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:android_custom="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:overScrollMode="never"
+    android:fadeScrollbars="false"
+    android:fillViewport="true"
+    tools:context="com.codoon.clubgps.ui.fragment.history.HistoryPagerDetailFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment"/>
+        android:orientation="vertical">
 
-</FrameLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:background="@color/bg_color_grey"
+            android:layout_height="130dp">
+
+            <TextView
+                android:id="@+id/distance_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="24dp"
+                android:text="0.0"
+                android:textColor="@color/white"
+                android:textSize="60sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/distance_tv"
+                android:layout_toRightOf="@id/distance_tv"
+                android:layout_alignBaseline="@id/distance_tv"
+                android:text="@string/kilometers"
+                android:textColor="@color/light_white"
+                android:textSize="14sp"/>
+
+            <LinearLayout
+                android:id="@+id/tmp0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="50dp"
+                android:gravity="center_vertical|left"
+                android:orientation="vertical"
+                android:padding="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/run_outdoor"
+                    android:textColor="@color/light_white"/>
+
+                <TextView
+                    android:id="@+id/time_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:text="记录产生时间"
+                    android:textColor="@color/light_white"/>
+
+            </LinearLayout>
+
+            <View
+                style="@style/line_v"
+                android:layout_alignBottom="@id/tmp0"
+                android:layout_alignTop="@id/tmp0"
+                android:layout_marginRight="20dp"
+                android:layout_toLeftOf="@id/tmp0"/>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/light_gray_bg"
+            android:orientation="vertical">
+
+            <View
+                style="@style/line_h"
+                android:background="@color/light_line"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.codoon.clubgps.widget.TypeItemView
+                    android:id="@+id/mDurationTv"
+                    android_custom:name="@string/duration"
+                    android_custom:type_icon="@mipmap/ic_history_duration_summury"
+                    android_custom:value="00:00:00"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+
+                <View
+                    android:layout_width="0.5dip"
+                    android:layout_height="match_parent"
+                    android:background="@color/light_line"/>
+
+
+                <com.codoon.clubgps.widget.TypeItemView
+                    android:id="@+id/mCalorieTv"
+                    android_custom:name="@string/calories"
+                    android_custom:type_icon="@mipmap/ic_history_calorie"
+                    android_custom:value="0"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dip"
+                android:background="@color/light_line"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.codoon.clubgps.widget.TypeItemView
+                    android:id="@+id/mTvAvgPace"
+                    android_custom:name="@string/avg_pace"
+                    android_custom:type_icon="@mipmap/ic_history_avgpace_summury"
+                    android_custom:unit="@string/unit_pace"
+                    android_custom:value="00'00''"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+
+                <View
+                    android:layout_width="0.5dip"
+                    android:layout_height="match_parent"
+                    android:background="@color/light_line"/>
+
+                <com.codoon.clubgps.widget.TypeItemView
+                    android:id="@+id/mTvMaxPace"
+                    android_custom:name="@string/max_pace"
+                    android_custom:type_icon="@mipmap/ic_history_maxpace"
+                    android_custom:unit="@string/unit_pace"
+                    android_custom:value="00'00''"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dip"
+                android:background="@color/light_line"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+
+                <View
+                    android:layout_width="0.5dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/light_line"/>
+
+                <com.codoon.clubgps.widget.TypeItemView
+                    android_custom:name="@string/avg_speed"
+                    android_custom:type_icon="@mipmap/ic_history_avgspeed"
+                    android_custom:unit="@string/unit_speed"
+                    android_custom:value="0.0"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+
+                <View
+                    android:layout_width="0.5dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/light_line"/>
+
+                <com.codoon.clubgps.widget.TypeItemView
+                    android_custom:name="@string/max_speed"
+                    android_custom:type_icon="@mipmap/ic_history_maxspeed"
+                    android_custom:unit="@string/unit_speed"
+                    android_custom:value="0.0"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>
+

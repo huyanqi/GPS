@@ -5,10 +5,9 @@
              android:background="@color/bg_color_grey"
              tools:context="com.codoon.clubgps.ui.fragment.history.HistoryPagerPaceFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <com.codoon.clubgps.widget.PaceChatView
+        android:id="@+id/pace_chat_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment"/>
+        android:layout_height="match_parent" />
 
 </FrameLayout>

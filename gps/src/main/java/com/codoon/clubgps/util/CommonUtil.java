@@ -1,8 +1,10 @@
 package com.codoon.clubgps.util;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
+import android.widget.TextView;
 
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdate;
@@ -259,12 +261,12 @@ public class CommonUtil {
     }
 
     /**
-     * 获取数字的第一个字
-     * @param number
-     * @return
+     * 获取公里数整理
+     * @param kmNumber 30.5
+     * @return 30
      */
-    public static int getFirstNumber(double number){
-        return Integer.parseInt(String.valueOf(number).substring(0, 1));
+    public static int getKmNumber(double kmNumber){
+        return (int) kmNumber;
     }
 
     /**
@@ -316,6 +318,9 @@ public class CommonUtil {
         }
     }
 
-
+    public static void setCustomTypeFace(TextView textView){
+        Typeface typeFace =Typeface.createFromAsset(GPSApplication.getContext().getAssets(),"fonts/DINCondensed.ttf");
+        textView.setTypeface(typeFace);
+    }
 
 }

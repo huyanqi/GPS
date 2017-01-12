@@ -30,7 +30,7 @@ public class HistoryDetail extends DataSupport implements Parcelable {
     private double max_speed;//最大速度,单位:km/h
     private double avg_speed;//平均速度
 
-    private double total_length;//运动总长
+    private double total_length;//运动总长度
     private long total_time;//持续时间，单位:s
     private double total_calories;//消耗卡路里总数
     private String thum;//缩略图地址
@@ -161,8 +161,10 @@ public class HistoryDetail extends DataSupport implements Parcelable {
     }
 
     public List<HistoryGPSPoint> findAllGPSPoints(){
-        List<HistoryGPSPoint> list = DataSupport.where("parent_uuid = ?", uuid).order("timestamp ASC").find(HistoryGPSPoint.class);
-        return list;
+        if(recordGPSPointList == null){
+            recordGPSPointList = DataSupport.where("parent_uuid = ?", uuid).order("timestamp ASC").find(HistoryGPSPoint.class);
+        }
+        return recordGPSPointList;
     }
 
     @Override
