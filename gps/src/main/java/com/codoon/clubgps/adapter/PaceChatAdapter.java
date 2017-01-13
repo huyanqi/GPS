@@ -23,6 +23,8 @@ public class PaceChatAdapter extends RecyclerView.Adapter<PaceChatHolder> {
     private LayoutInflater mLayoutInflater;
     private final int TYPE_ITEM = 0;
     private final int TYPE_KMTEXT = 1;
+    private int maxDuration;
+    private long minPace;
 
     public PaceChatAdapter(Context context, List<PaceChatBean> list){
         this.mContext = context;
@@ -32,14 +34,14 @@ public class PaceChatAdapter extends RecyclerView.Adapter<PaceChatHolder> {
 
     @Override
     public PaceChatHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new PaceChatHolder(mLayoutInflater.inflate(R.layout.item_pace_chat, null));
+        return new PaceChatHolder(mLayoutInflater.inflate(R.layout.item_pace_chat, parent, false));
     }
 
     @Override
     public void onBindViewHolder(PaceChatHolder holder, int position) {
         PaceChatBean bean = mList.get(position);
         if(getItemViewType(position) == TYPE_ITEM){
-            holder.updateView(bean);
+            holder.updateView(maxDuration,minPace, bean);
         }else{
             holder.updateKmText(bean.getKmText());
         }
@@ -58,4 +60,11 @@ public class PaceChatAdapter extends RecyclerView.Adapter<PaceChatHolder> {
         return TYPE_KMTEXT;
     }
 
+    public void setMaxDuration(int maxDuration) {
+        this.maxDuration = maxDuration;
+    }
+
+    public void setMinPace(long minPace) {
+        this.minPace = minPace;
+    }
 }

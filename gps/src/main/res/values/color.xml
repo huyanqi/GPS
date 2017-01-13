@@ -2,7 +2,7 @@
 <resources>
 
     <color name="gps_line">#04aeda</color>
-    <color name="white">#ffffff</color>
+    <color name="white">#FFFFFF</color>
 
     <!--浅白色-->
     <color name="light_white">#79798E</color>
@@ -25,4 +25,7 @@
     <!-- 浅灰色背景-->
     <color name="light_gray_bg">#30303A</color>
 
+    <!-- 控件里虚线颜色-->
+    <color name="dottet_line">#373743</color>
+    
 </resources>

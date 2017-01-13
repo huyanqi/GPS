@@ -5,7 +5,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ToggleButton;
 
+import com.codoon.clubgps.bean.PaceChatViewPojo;
 import com.codoon.clubgps.core.GPSManager;
+import com.codoon.clubgps.widget.PaceChatView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,6 +48,18 @@ public class MainActivity extends AppCompatActivity {
                 mGPSManager.getUserRecord(user_id);
             }
         });
+
+        PaceChatView mPaceChatView = (PaceChatView) findViewById(R.id.pace_chat_view);
+        List<PaceChatViewPojo> datas = new ArrayList<>();
+        datas.add(new PaceChatViewPojo("1公里", 150));
+        datas.add(new PaceChatViewPojo("3公里", 170));
+        datas.add(new PaceChatViewPojo("5公里", 85 ));
+        datas.add(new PaceChatViewPojo("7公里", 32 ));
+        datas.add(new PaceChatViewPojo("16公里", 187 ));
+        datas.add(new PaceChatViewPojo("9公里", 1 ));
+        datas.add(new PaceChatViewPojo("20公里", 170 ));
+        mPaceChatView.setDatas(datas);
+
 
     }
 }

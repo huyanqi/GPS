@@ -1,6 +1,8 @@
 package com.codoon.clubgps.util;
 
 import android.content.Context;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
@@ -321,6 +323,26 @@ public class CommonUtil {
     public static void setCustomTypeFace(TextView textView){
         Typeface typeFace =Typeface.createFromAsset(GPSApplication.getContext().getAssets(),"fonts/DINCondensed.ttf");
         textView.setTypeface(typeFace);
+    }
+
+    public static int getTextHeight(String text, Paint paint) {
+        Rect bounds = new Rect();
+        paint.getTextBounds(text, 0, text.length(), bounds);
+        int height = bounds.bottom + bounds.height();
+        return height;
+    }
+
+    public static int getTextWitdh(String text, Paint paint) {
+        int iRet = 0;
+        if (text != null && text.length() > 0) {
+            int len = text.length();
+            float[] widths = new float[len];
+            paint.getTextWidths(text, widths);
+            for (int j = 0; j < len; j++) {
+                iRet += (int) Math.ceil(widths[j]);
+            }
+        }
+        return iRet;
     }
 
 }

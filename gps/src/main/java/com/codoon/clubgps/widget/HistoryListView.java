@@ -44,7 +44,6 @@ import java.util.List;
 
 public class HistoryListView extends View {
 
-    private Context mContext;
     private String bgColor = "#2b2b34";
 
     private HistoryCount mHistoryCount;
@@ -72,7 +71,6 @@ public class HistoryListView extends View {
 
     public HistoryListView(Context context, HistoryCount historyCount) {
         super(context);
-        this.mContext = context;
         this.mHistoryCount = historyCount;
         minWidth = CommonUtil.dip2px(8);
         yyyyMMddFormat = new SimpleDateFormat("yyyyMMdd");
@@ -188,10 +186,9 @@ public class HistoryListView extends View {
         return line;
     }
 
-
     @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
         initChatRect();
         initLines();
 

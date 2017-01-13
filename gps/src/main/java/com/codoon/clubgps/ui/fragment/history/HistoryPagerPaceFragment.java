@@ -8,12 +8,12 @@ import android.view.ViewGroup;
 
 import com.codoon.clubgps.R;
 import com.codoon.clubgps.bean.HistoryDetail;
-import com.codoon.clubgps.widget.PaceChatView;
+import com.codoon.clubgps.widget.PaceListView;
 
 public class HistoryPagerPaceFragment extends Fragment {
 
     private View rootView;
-    private PaceChatView mPaceChatView;
+    private PaceListView mPaceChatView;
     private HistoryDetail mHistoryDetail;
 
     public HistoryPagerPaceFragment() {}
@@ -41,7 +41,7 @@ public class HistoryPagerPaceFragment extends Fragment {
     }
 
     private void init(){
-        mPaceChatView = (PaceChatView) rootView.findViewById(R.id.pace_chat_view);
+        mPaceChatView = (PaceListView) rootView.findViewById(R.id.pace_chat_view);
         mPaceChatView.setHistoryDetailBean(mHistoryDetail);
     }
 
