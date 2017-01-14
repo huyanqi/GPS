@@ -227,7 +227,7 @@ public class CommonUtil {
     /**
      * 获取历史统计里月时间的展示文本
      *
-     * @param yyyyM     格式:yyyyM
+     * @param yyyyM 格式:yyyyM
      * @return
      */
     public static String getHistoryDisplayMonthTime(String yyyyM) {
@@ -264,15 +264,17 @@ public class CommonUtil {
 
     /**
      * 获取公里数整理
+     *
      * @param kmNumber 30.5
      * @return 30
      */
-    public static int getKmNumber(double kmNumber){
+    public static int getKmNumber(double kmNumber) {
         return (int) kmNumber;
     }
 
     /**
      * 把路线画到地图中并且显示到界面中间
+     *
      * @param latLngList
      * @param aMap
      * @param width
@@ -281,13 +283,21 @@ public class CommonUtil {
      * @param animDuration
      * @param builder
      */
-    public static void drawLineOnMap(List<LatLng> latLngList, AMap aMap, int width, int height, int padding, long animDuration, LatLngBounds.Builder builder){
-        for(LatLng latLng : latLngList){
+    public static void drawLineOnMap(List<LatLng> latLngList, AMap aMap, int width, int height, int padding, long animDuration, LatLngBounds.Builder builder, List<Integer> colors) {
+        for (LatLng latLng : latLngList) {
             builder.include(latLng);
         }
 
         //将路线画到地图上
-        aMap.addPolyline(new PolylineOptions().addAll(latLngList).geodesic(true).width(16).color(ContextCompat.getColor(GPSApplication.getAppContext(), R.color.gps_line)));
+        if (colors != null) {
+            aMap.addPolyline(new PolylineOptions().addAll(latLngList)
+                    .width(16)
+                    .colorValues(colors)
+                    .useGradient(true)
+            );
+        } else {
+            aMap.addPolyline(new PolylineOptions().addAll(latLngList).geodesic(true).width(16).color(ContextCompat.getColor(GPSApplication.getAppContext(), R.color.gps_line)));
+        }
 
         ArrayList<MarkerOptions> markers = new ArrayList<>();
 
@@ -313,15 +323,15 @@ public class CommonUtil {
                 height,
                 padding);
 
-        if(animDuration == 0){
+        if (animDuration == 0) {
             aMap.moveCamera(cameraUpdate);
-        }else{
+        } else {
             aMap.animateCamera(cameraUpdate, animDuration, null);
         }
     }
 
-    public static void setCustomTypeFace(TextView textView){
-        Typeface typeFace =Typeface.createFromAsset(GPSApplication.getContext().getAssets(),"fonts/DINCondensed.ttf");
+    public static void setCustomTypeFace(TextView textView) {
+        Typeface typeFace = Typeface.createFromAsset(GPSApplication.getContext().getAssets(), "fonts/DINCondensed.ttf");
         textView.setTypeface(typeFace);
     }
 

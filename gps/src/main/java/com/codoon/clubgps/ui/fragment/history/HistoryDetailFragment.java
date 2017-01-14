@@ -23,6 +23,7 @@ import com.codoon.clubgps.bean.HistoryDetail;
 import com.codoon.clubgps.bean.HistoryGPSPoint;
 import com.codoon.clubgps.ui.HistoryDetailActivity;
 import com.codoon.clubgps.util.CommonUtil;
+import com.codoon.clubgps.util.PaceLevelPicker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,13 +80,21 @@ public class HistoryDetailFragment extends Fragment implements AMap.OnMapLoadedL
         //隐藏logo
         uiSettings.setLogoBottomMargin(-50);
         //4.获取本地跑步所有路线点
+
         mHistoryGPSPointList = mHistoryDetail.findAllGPSPoints();
+        int count = mHistoryGPSPointList.size();
+        PaceLevelPicker picker = new PaceLevelPicker(mHistoryDetail.getMax_pace(), count);
+        List<Integer> mLineColors = new ArrayList<>();
+
         List<LatLng> latLngList = new ArrayList<>();
-        for(HistoryGPSPoint gpsPoint : mHistoryGPSPointList){
+        HistoryGPSPoint gpsPoint;
+        for(int i=0;i<count;i++){
+            gpsPoint = mHistoryGPSPointList.get(i);
             latLngList.add(new LatLng(gpsPoint.getLatitude(), gpsPoint.getLongitude()));
+            mLineColors.add(picker.getColor(gpsPoint.getPace()));
         }
 
-        CommonUtil.drawLineOnMap(latLngList, mAMap, CommonUtil.getScreenWidth(GPSApplication.getAppContext()), CommonUtil.dip2px(180), CommonUtil.dip2px(30), 0, mBuilder);
+        CommonUtil.drawLineOnMap(latLngList, mAMap, CommonUtil.getScreenWidth(GPSApplication.getAppContext()), CommonUtil.dip2px(180), CommonUtil.dip2px(30), 0, mBuilder, mLineColors);
 
     }
 

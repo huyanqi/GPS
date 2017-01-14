@@ -1,13 +1,38 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:background="@color/bg_color_grey"
-             tools:context="com.codoon.clubgps.ui.fragment.history.HistoryPagerChatFragment">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/bg_color_grey"
+              android:orientation="vertical"
+              tools:context="com.codoon.clubgps.ui.fragment.history.HistoryPagerChatFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="15dp"
+        android:background="@color/light_gray_bg"
+        android:gravity="bottom">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/light_white"
+            android:textSize="18sp"
+            android:text="@string/pace"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/light_dark"
+            android:layout_marginLeft="10dp"
+            android:text="@string/unit_pace"/>
+
+    </LinearLayout>
 
     <com.codoon.clubgps.widget.PaceChatView
         android:id="@+id/pace_chat_view"
         android:layout_width="match_parent"
         android:layout_height="260dp"/>
 
-</FrameLayout>
+</LinearLayout>

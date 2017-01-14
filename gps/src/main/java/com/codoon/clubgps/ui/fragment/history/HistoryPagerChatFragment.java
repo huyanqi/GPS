@@ -8,7 +8,9 @@ import android.view.ViewGroup;
 
 import com.codoon.clubgps.R;
 import com.codoon.clubgps.bean.HistoryDetail;
+import com.codoon.clubgps.bean.HistoryGPSPoint;
 import com.codoon.clubgps.bean.PaceChatViewPojo;
+import com.codoon.clubgps.util.CommonUtil;
 import com.codoon.clubgps.widget.PaceChatView;
 
 import java.util.ArrayList;
@@ -47,13 +49,23 @@ public class HistoryPagerChatFragment extends Fragment {
     private void init (){
         mPaceChatView = (PaceChatView) rootView.findViewById(R.id.pace_chat_view);
         List<PaceChatViewPojo> datas = new ArrayList<>();
-        datas.add(new PaceChatViewPojo("1公里", 100));
-        datas.add(new PaceChatViewPojo("3公里", 170));
-        datas.add(new PaceChatViewPojo("5公里", 85 ));
-        datas.add(new PaceChatViewPojo("7公里", 32 ));
-        datas.add(new PaceChatViewPojo("9公里", 1 ));
-        datas.add(new PaceChatViewPojo("16公里", 87 ));
-        datas.add(new PaceChatViewPojo("20公里", 0 ));
+        //获取公里数和平均配速
+        List<HistoryGPSPoint> list = mHistoryDetail.findAllGPSPoints();
+        int currentKm = 1;
+        long pace = 0;//临时存储某一段公里的配速
+        int count = 0;//存储某一段公里的打点数量
+        for(HistoryGPSPoint historyGPSPoint : list){
+            count++;
+            pace += historyGPSPoint.getPace();
+            if(historyGPSPoint.getTotal_length() / 1000 > currentKm){
+                int km = CommonUtil.getKmNumber(historyGPSPoint.getTotal_length() / 1000);
+                datas.add(new PaceChatViewPojo(km+"", pace / count));
+                currentKm = km + 1;
+            }
+            pace = 0;
+            count = 0;
+        }
+
         mPaceChatView.setDatas(datas);
     }
 

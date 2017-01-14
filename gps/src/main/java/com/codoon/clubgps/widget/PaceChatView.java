@@ -2,7 +2,6 @@ package com.codoon.clubgps.widget;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
@@ -29,12 +28,12 @@ import java.util.List;
 
 public class PaceChatView extends View {
 
-    private float lineSmoothness = 0.2f;
+    private float lineSmoothness = 0.1f;
     private List<PaceChatViewPojo> datas;
     private float maxValue;
     private RectF bgRect;
 
-    private int[] lineColors = new int[]{Color.RED, Color.YELLOW, Color.GREEN};
+    private int[] lineColors = new int[]{0xffF85445, 0xffd8d552, 0xff79E05C};
     private float[] levels;
 
     private Paint bgPaint;
@@ -74,7 +73,7 @@ public class PaceChatView extends View {
         linePaint.setStyle(Paint.Style.STROKE);
         linePaint.setColor(ContextCompat.getColor(context, R.color.gps_line));
         linePaint.setAntiAlias(true);
-        linePaint.setStrokeWidth(6);
+        linePaint.setStrokeWidth(4);
 
         verticalValuePadding = CommonUtil.dip2px(verticalValuePadding);
     }
@@ -106,18 +105,14 @@ public class PaceChatView extends View {
         int count = lineColors.length;
         float offset = maxValue / count;
         levels = new float[count];
-        for(int i=0;i<count;i++){
-            levels[i] = i * offset;
+        for(int i=1;i<=count;i++){
+            levels[i-1] = i * offset;
         }
 
         mLineColors = new int[datas.size()];
         for(int i=0;i<datas.size();i++){
             mLineColors[i] = lineColors[getLevel(datas.get(i).getValue())];
         }
-
-        //new int[]{Color.RED, Color.YELLOW, Color.GREEN}, new float[]{0.2f , 0.3f, 0.7f};
-        System.out.println(1);
-
     }
 
     /**
@@ -126,14 +121,17 @@ public class PaceChatView extends View {
      * @return
      */
     private int getLevel(float value){
+        int level = levels.length - 1;
         float startV = 0;
         for(int i=0;i<levels.length;i++){
             if(startV <= value && value <= levels[i]){
-                return i;
+                level = i;
+                break;
             }
             startV = levels[i];
         }
-        return 0;
+
+        return level;
     }
 
     @Override
@@ -256,12 +254,15 @@ public class PaceChatView extends View {
             currentPointY = nextPointY;
         }
 
-        linePaint.setShader(new LinearGradient(0, 0, bgRect.width(), 0, mLineColors, null, Shader.TileMode.MIRROR));
-        canvas.drawPath(mPath, linePaint);
-
         //添加一个从最后一个点到控件最后的结束点,y坐标相同
         Point lastPoint = mPointList.get(mPointList.size()-1);
-        canvas.drawLine(lastPoint.x - linePaint.getStrokeWidth() / 2, lastPoint.y, bgRect.right, lastPoint.y, linePaint);
+        Paint tmpPaint = new Paint();
+        tmpPaint.setStrokeWidth(linePaint.getStrokeWidth());
+        tmpPaint.setColor(mLineColors[mLineColors.length-1]);
+        canvas.drawLine(lastPoint.x - tmpPaint.getStrokeWidth() / 2, lastPoint.y, bgRect.right, lastPoint.y, tmpPaint);
+
+        linePaint.setShader(new LinearGradient(getLineX(0), 0, lastPoint.x, 0, mLineColors, null, Shader.TileMode.MIRROR));
+        canvas.drawPath(mPath, linePaint);
 
         mPath.close();
 
@@ -320,7 +321,7 @@ public class PaceChatView extends View {
      * 获取底部文字的 x 坐标和 baseLine
      *
      * @param index
-     * @return
+     * @return      v
      */
     private float[] getXAndBaseLine(int index, String text) {
         float x = getLineX(index) - CommonUtil.getTextWitdh(text, textPaint) / 2;

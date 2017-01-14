@@ -32,7 +32,11 @@ public class TestView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        mPaint.setShader(new LinearGradient(0, 0, getWidth(), 0, new int[]{Color.RED, Color.YELLOW, Color.GREEN}, new float[]{0.2f , 0.1f, 0.7f}, Shader.TileMode.MIRROR));
+        mPaint.setShader(new LinearGradient(0, 0, getWidth(), 0, new int[]{
+                Color.RED, Color.RED, Color.RED
+                ,Color.RED, Color.RED, Color.RED
+                ,Color.RED, Color.GREEN, Color.RED
+                , Color.GREEN, Color.RED, Color.GREEN}, null, Shader.TileMode.MIRROR));
         canvas.drawLine(0, 10, getWidth(), 10, mPaint);
     }
 

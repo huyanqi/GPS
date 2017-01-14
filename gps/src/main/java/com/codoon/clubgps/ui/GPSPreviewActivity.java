@@ -63,7 +63,7 @@ public class GPSPreviewActivity extends FragmentActivity implements View.OnClick
             latLngList.add(new LatLng(gpsPoint.getLatitude(), gpsPoint.getLongitude()));
         }
 
-        CommonUtil.drawLineOnMap(latLngList, mAMap, CommonUtil.getScreenWidth(GPSApplication.getAppContext()), CommonUtil.dip2px(180), CommonUtil.dip2px(30), 500, mBuilder);
+        CommonUtil.drawLineOnMap(latLngList, mAMap, CommonUtil.getScreenWidth(GPSApplication.getAppContext()), CommonUtil.dip2px(180), CommonUtil.dip2px(30), 500, mBuilder, null);
     }
 
     private MapView mMapView;
