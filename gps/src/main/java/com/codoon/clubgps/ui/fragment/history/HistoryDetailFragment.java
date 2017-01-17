@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdate;
@@ -25,7 +26,9 @@ import com.codoon.clubgps.ui.HistoryDetailActivity;
 import com.codoon.clubgps.util.CommonUtil;
 import com.codoon.clubgps.util.PaceLevelPicker;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class HistoryDetailFragment extends Fragment implements AMap.OnMapLoadedListener, View.OnClickListener {
@@ -39,6 +42,15 @@ public class HistoryDetailFragment extends Fragment implements AMap.OnMapLoadedL
     private HistoryDetailActivity mActivity;
     private List<HistoryGPSPoint> mHistoryGPSPointList;
     private boolean contentIsShown;
+
+    private SimpleDateFormat mSimpleDateFormat;
+
+    private TextView timeTv;
+    private TextView distanceTv;
+    private TextView durationTv;
+    private TextView speedTv;
+    private TextView paceTv;
+    private TextView caloriesTv;
 
     public HistoryDetailFragment() {
         // Required empty public constructor
@@ -58,7 +70,7 @@ public class HistoryDetailFragment extends Fragment implements AMap.OnMapLoadedL
         rootView = inflater.inflate(R.layout.fragment_history_detail, container, false);
         mMapView = (MapView) rootView.findViewById(R.id.map_view);
         mMapView.onCreate(savedInstanceState);
-        init();
+        mSimpleDateFormat = new SimpleDateFormat("M"+getResources().getString(R.string.date_month)+"d"+getResources().getString(R.string.date_day)+" H:m");
         return rootView;
     }
 
@@ -67,6 +79,26 @@ public class HistoryDetailFragment extends Fragment implements AMap.OnMapLoadedL
 
         mAMap = mMapView.getMap();
         mAMap.setOnMapLoadedListener(this);
+
+        timeTv = (TextView) rootView.findViewById(R.id.time_tv);
+        distanceTv = (TextView) rootView.findViewById(R.id.distance_tv);
+        durationTv = (TextView) rootView.findViewById(R.id.duration_tv);
+        speedTv = (TextView) rootView.findViewById(R.id.speed_tv);
+        paceTv = (TextView) rootView.findViewById(R.id.pace_tv);
+        caloriesTv = (TextView) rootView.findViewById(R.id.calories_tv);
+
+        timeTv.setText(mSimpleDateFormat.format(new Date(mHistoryDetail.getStartTimesStamp())));
+        distanceTv.setText(CommonUtil.format2(mHistoryDetail.getTotal_length() / 1000));
+        durationTv.setText(CommonUtil.getPeriodTime(mHistoryDetail.getTotal_time()));
+        speedTv.setText(CommonUtil.format1(mHistoryDetail.getAvg_speed()));
+        paceTv.setText(CommonUtil.getPaceTimeStr(mHistoryDetail.getAvg_pace()));
+        caloriesTv.setText(CommonUtil.format1(mHistoryDetail.getTotal_calories()));
+
+        CommonUtil.setCustomTypeFace(distanceTv);
+        CommonUtil.setCustomTypeFace(durationTv);
+        CommonUtil.setCustomTypeFace(speedTv);
+        CommonUtil.setCustomTypeFace(paceTv);
+        CommonUtil.setCustomTypeFace(caloriesTv);
 
         rootView.findViewById(R.id.close_view).setOnClickListener(this);
     }
@@ -100,6 +132,7 @@ public class HistoryDetailFragment extends Fragment implements AMap.OnMapLoadedL
 
     public void setData(HistoryDetail historyDetail){
         this.mHistoryDetail = historyDetail;
+        init();
     }
 
     @Override

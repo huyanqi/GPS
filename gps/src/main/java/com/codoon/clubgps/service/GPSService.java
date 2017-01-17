@@ -49,7 +49,7 @@ public class GPSService extends Service implements AMapLocationListener, TraceLi
     private LBSTraceClient mTraceClient;
     private List<TraceLocation> mTraceLocationList;
 
-    private boolean isRunning = true;//是否正在跑步中(非暂停状态)
+    private boolean isRunning = false;//是否正在跑步中
     private boolean isSearchingGPS = true;//GPS信号搜索中
 
     private GPSPoint lastGPSPoint;//记录最后一个GPS坐标点
@@ -164,15 +164,15 @@ public class GPSService extends Service implements AMapLocationListener, TraceLi
         locationOption.setInterval(800);//系统默认是2000ms,最小800ms
         locationOption.setNeedAddress(false);//不需要返回地址信息
         locationOption.setMockEnable(true);//允许模拟位置，可以调用第三方工具模拟GPS
+
         mMapLocationClient.setLocationOption(locationOption);
 
         mTraceClient = LBSTraceClient.getInstance(this.getApplicationContext());
         mTraceLocationList = new ArrayList<TraceLocation>();
 
-        startLocation();
     }
 
-    private void startLocation() {
+    public void startLocation() {
         if(GPSApplication.getAppContext().isFake()){
             startFake();//开启模拟定位
         }else{

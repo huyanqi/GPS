@@ -1,23 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
                                              xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
                                              android:layout_width="match_parent"
                                              android:layout_height="wrap_content"
-                                             android:gravity="center_vertical"
-                                             android:orientation="horizontal">
+                                             android:background="@color/light_gray_bg">
 
 
-    <ProgressBar
-        android:layout_height="0dp"
-        android:id="@+id/duration_pb"
-        android:layout_width="0dp"
-        android:progressDrawable="@drawable/progress_pace_chat"
-        app:layout_constraintLeft_toRightOf="@+id/km_tv"
-        app:layout_constraintTop_toTopOf="@+id/km_tv"
-        app:layout_constraintBottom_toBottomOf="@+id/km_tv"
+    <TextView
+        android:text="0.00"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/distance_tv"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="#BEBEBE"
+        android:textSize="40sp"
+        android:layout_marginStart="12dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="12dp"/>
+
+    <TextView
+        android:text="@string/kilometers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView4"
+        android:textColor="@color/light_white"
+        tools:layout_editor_absoluteY="21dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintLeft_toRightOf="@+id/distance_tv"
+        android:layout_marginLeft="8dp"/>
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/time_tv"
+        android:layout_marginStart="8dp"
+        app:layout_constraintLeft_toRightOf="@+id/distance_tv"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/textView4"
+        android:textSize="12sp"
+        android:textColor="@color/light_dark"/>
+
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginEnd="10dp"
-        android:layout_marginRight="10dp"/>
+        android:layout_marginRight="16dp"
+        android:orientation="horizontal"
+        android:id="@+id/radio_group_rg">
 
+        <RadioButton
+            android:id="@+id/tab_1"
+            android:layout_width="wrap_content"
+            android:background="@drawable/bg_corner_left_check_drawable"
+            android:button="@null"
+            android:gravity="center"
+            android:text="@string/date_week"
+            android:textColor="@color/light_white"
+            android:textSize="12sp"
+            android:layout_height="26.5dp" />
+
+        <RadioButton
+            android:id="@+id/tab_2"
+            android:background="@drawable/bg_coner_right_check_drawable"
+            android:button="@null"
+            android:gravity="center"
+            android:checked="true"
+            android:text="@string/date_month"
+            android:textColor="@color/light_white"
+            android:textSize="12sp"
+            android:layout_width="60dp"
+            android:layout_height="26.5dp" />
+
+    </RadioGroup>
 
 </android.support.constraint.ConstraintLayout>

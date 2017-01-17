@@ -1,79 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:background="@color/light_gray_bg"
               android:orientation="vertical">
 
-    <RelativeLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:padding="12dp"
-        android:orientation="horizontal">
+        android:background="@color/light_gray_bg">
+
 
         <TextView
             android:id="@+id/distance_tv"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="28sp"
-            android:text="0.00"/>
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="16dp"
+            android:text="0.00"
+            android:textColor="#BEBEBE"
+            android:textSize="40sp"/>
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/textView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/distance_tv"
-            android:layout_marginLeft="16dp"
-            android:orientation="vertical">
+            android:text="@string/kilometers"
+            android:textColor="@color/light_white"
+            android:layout_marginStart="8dp"
+            app:layout_constraintLeft_toRightOf="@+id/distance_tv"
+            android:layout_marginLeft="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/time_tv"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/kilometers"/>
-
-            <TextView
-                android:id="@+id/time_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:text="@string/time_currentmonth" />
-
-        </LinearLayout>
+        <TextView
+            android:id="@+id/time_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:textColor="@color/light_dark"
+            android:textSize="12sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/distance_tv"
+            android:layout_marginStart="8dp"
+            app:layout_constraintLeft_toRightOf="@+id/distance_tv"
+            android:layout_marginLeft="8dp"/>
 
         <RadioGroup
             android:id="@+id/radio_group_rg"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_alignParentRight="true"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="16dp"
             android:orientation="horizontal">
 
             <RadioButton
                 android:id="@+id/tab_1"
                 android:layout_width="60dp"
+                android:layout_height="26.5dp"
                 android:background="@drawable/bg_corner_left_check_drawable"
                 android:button="@null"
+                android:checked="true"
                 android:gravity="center"
                 android:text="@string/date_week"
-                android:textSize="12sp"
-                android:checked="true"
-                android:layout_height="26.5dp" />
+                android:textColor="@color/light_white"
+                android:textSize="12sp"/>
 
             <RadioButton
                 android:id="@+id/tab_2"
+                android:layout_width="60dp"
+                android:layout_height="26.5dp"
                 android:background="@drawable/bg_coner_right_check_drawable"
                 android:button="@null"
                 android:gravity="center"
                 android:text="@string/date_month"
-                android:textSize="12sp"
-                android:layout_width="60dp"
-                android:layout_height="26.5dp" />
+                android:textColor="@color/light_white"
+                android:textSize="12sp"/>
+
         </RadioGroup>
 
-    </RelativeLayout>
+    </android.support.constraint.ConstraintLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <android.support.v4.view.ViewPager
             android:id="@+id/week_view_pager"
             android:layout_width="match_parent"
@@ -84,8 +105,8 @@
         <android.support.v4.view.ViewPager
             android:id="@+id/month_view_pager"
             android:layout_width="match_parent"
-            android:visibility="gone"
-            android:layout_height="220dp">
+            android:layout_height="220dp"
+            android:visibility="gone">
 
         </android.support.v4.view.ViewPager>
     </FrameLayout>

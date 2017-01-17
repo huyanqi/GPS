@@ -91,7 +91,7 @@
                 android:orientation="horizontal">
 
                 <com.codoon.clubgps.widget.TypeItemView
-                    android:id="@+id/mDurationTv"
+                    android:id="@+id/duration_tv"
                     android_custom:name="@string/duration"
                     android_custom:type_icon="@mipmap/ic_history_duration_summury"
                     android_custom:value="00:00:00"
@@ -106,7 +106,7 @@
 
 
                 <com.codoon.clubgps.widget.TypeItemView
-                    android:id="@+id/mCalorieTv"
+                    android:id="@+id/calories_tv"
                     android_custom:name="@string/calories"
                     android_custom:type_icon="@mipmap/ic_history_calorie"
                     android_custom:value="0"
@@ -128,7 +128,7 @@
                 android:orientation="horizontal">
 
                 <com.codoon.clubgps.widget.TypeItemView
-                    android:id="@+id/mTvAvgPace"
+                    android:id="@+id/avg_pace_tv"
                     android_custom:name="@string/avg_pace"
                     android_custom:type_icon="@mipmap/ic_history_avgpace_summury"
                     android_custom:unit="@string/unit_pace"
@@ -143,7 +143,7 @@
                     android:background="@color/light_line"/>
 
                 <com.codoon.clubgps.widget.TypeItemView
-                    android:id="@+id/mTvMaxPace"
+                    android:id="@+id/max_pace_tv"
                     android_custom:name="@string/max_pace"
                     android_custom:type_icon="@mipmap/ic_history_maxpace"
                     android_custom:unit="@string/unit_pace"
@@ -172,6 +172,7 @@
                     android:background="@color/light_line"/>
 
                 <com.codoon.clubgps.widget.TypeItemView
+                    android:id="@+id/avg_speed_tv"
                     android_custom:name="@string/avg_speed"
                     android_custom:type_icon="@mipmap/ic_history_avgspeed"
                     android_custom:unit="@string/unit_speed"
@@ -186,6 +187,7 @@
                     android:background="@color/light_line"/>
 
                 <com.codoon.clubgps.widget.TypeItemView
+                    android:id="@+id/max_speed_tv"
                     android_custom:name="@string/max_speed"
                     android_custom:type_icon="@mipmap/ic_history_maxspeed"
                     android_custom:unit="@string/unit_speed"

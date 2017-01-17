@@ -9,9 +9,11 @@ import android.support.v7.widget.RecyclerView;
 import com.codoon.clubgps.R;
 import com.codoon.clubgps.adapter.HistoryListAdapter;
 import com.codoon.clubgps.adapter.listener.OnItemClickListener;
+import com.codoon.clubgps.application.GPSApplication;
 import com.codoon.clubgps.bean.HistoryDetail;
 import com.codoon.clubgps.bean.HistoryListBean;
 import com.codoon.clubgps.util.CommonUtil;
+import com.codoon.clubgps.widget.CommonDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,10 +40,9 @@ public class HistoryListActivity extends AppCompatActivity implements OnItemClic
     private void init(){
         mRecyclerView = (RecyclerView) findViewById(R.id.recycle_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.addItemDecoration(new CommonDecoration(LinearLayoutManager.HORIZONTAL));
         mRecyclerView.setAdapter(mAdapter = new HistoryListAdapter(mHistoryBeanList = new ArrayList<HistoryListBean>(), this));
-        mHistoryBeanList.addAll(getDatas(HistoryDetail.getHistoryList(getIntent().getStringExtra("user_id"))));
-
-
+        mHistoryBeanList.addAll(getDatas(HistoryDetail.getHistoryList(GPSApplication.getAppContext().getUser_id())));
     }
 
     /**

@@ -4,14 +4,18 @@ import android.app.FragmentTransaction;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 
+import com.amap.api.maps.AMap;
 import com.amap.api.maps.model.LatLng;
 import com.codoon.clubgps.R;
 import com.codoon.clubgps.bean.GPSPoint;
+import com.codoon.clubgps.bean.HistoryCount;
+import com.codoon.clubgps.bean.HistoryDetail;
 import com.codoon.clubgps.service.GPSService;
 import com.codoon.clubgps.ui.fragment.controller.ControllerFragment;
 import com.codoon.clubgps.ui.fragment.controller.MapFragment;
@@ -87,7 +91,6 @@ public class GPSControllerActivity extends AppCompatActivity implements GPSServi
         mGPSPoints.add(newGPSPoint);
         mMapFragment.onFirstLocationSuccess(newGPSPoint);
         mControllerFragment.onFirstLocationSuccess();
-        startRun();
     }
 
     /**
@@ -115,6 +118,7 @@ public class GPSControllerActivity extends AppCompatActivity implements GPSServi
     public void sportResume() {
         if (mGPSService == null) return;//有可能service还没绑定成功，MapFragment就已经开始加载完成了
         mGPSService.sportResume();
+        startRunTimer();
     }
 
     /**
@@ -129,7 +133,8 @@ public class GPSControllerActivity extends AppCompatActivity implements GPSServi
             savePoints2DB(mGPSPoints);
             mGPSPoints.clear();
             //跳转
-            GPSPreviewActivity.start(GPSControllerActivity.this, 1024, runDistance, runTime, avgPace);
+            save(runTime, avgPace);
+            //GPSPreviewActivity.start(GPSControllerActivity.this, 1024, runDistance, runTime, avgPace);
         } else {
             //没有足够的运动记录
             ToastUtil.showToast(R.string.toast_distance_too_short);
@@ -184,7 +189,9 @@ public class GPSControllerActivity extends AppCompatActivity implements GPSServi
                 mControllerFragment.sportPause();
                 switchFragment();
             }else{
-                mControllerFragment.sportResume();
+                //重新开始的运动，需要在MapFragment显示倒计时，然后切换回ControllerFragment
+                mGPSService.startLocation();
+                mMapFragment.startCountDown();
             }
         }
 
@@ -309,13 +316,6 @@ public class GPSControllerActivity extends AppCompatActivity implements GPSServi
     }
 
     /**
-     * 开始跑步
-     */
-    private void startRun() {
-        initRunTimer();
-    }
-
-    /**
      * 检查是否是继续跑步
      */
     private boolean checkIsContinue() {
@@ -352,7 +352,7 @@ public class GPSControllerActivity extends AppCompatActivity implements GPSServi
     /**
      * 开始记录跑步时间
      */
-    private void initRunTimer() {
+    private void startRunTimer() {
         closeTimers();
 
         mRunTimeTask = new TimerTask() {
@@ -376,6 +376,41 @@ public class GPSControllerActivity extends AppCompatActivity implements GPSServi
 
     public void fakeSignal(int accuracy) {
         mGPSService.fakeSignal(accuracy);
+    }
+
+    private void save(final int runTime, final long avgPace){
+        //1.获取地图截图
+        mMapFragment.getMapScreenShot(new AMap.OnMapScreenShotListener() {
+            @Override
+            public void onMapScreenShot(Bitmap bitmap) {
+
+                HistoryDetail recordDetail = new HistoryDetail().build(bitmap, runTime, avgPace, GPSPoint.getValidDatas());
+                //保存运动记录
+                recordDetail.save();
+
+                //保存路线点
+                DataSupport.saveAll(recordDetail.getRecordGPSPointList());
+
+                //添加到统计
+                HistoryCount.add2Count(recordDetail);
+
+                //清空临时存点的数据库
+                DataSupport.deleteAll(GPSPoint.class);
+
+                //跳转到历史记录列表
+                Intent intent = new Intent(GPSControllerActivity.this, HistoryListActivity.class);
+                startActivity(intent);
+
+                finish();
+
+            }
+
+            @Override
+            public void onMapScreenShot(Bitmap bitmap, int i) {
+
+            }
+        });
+
     }
 
 }

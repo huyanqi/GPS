@@ -12,14 +12,10 @@ import android.widget.TextView;
 import com.codoon.clubgps.R;
 import com.codoon.clubgps.adapter.ViewPagerAdapter;
 import com.codoon.clubgps.bean.HistoryCount;
-import com.codoon.clubgps.bean.HistoryCountData;
 import com.codoon.clubgps.util.CommonUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.codoon.clubgps.util.CommonUtil.getHistoryDisplayMonthTime;
-import static com.codoon.clubgps.util.CommonUtil.getHistoryDisplayWeekTime;
 
 /**
  * Created by Frankie on 2017/1/6.
@@ -68,6 +64,8 @@ public class HistoryListGroupView extends LinearLayout implements ViewPager.OnPa
         distanceTv = (TextView) rootView.findViewById(R.id.distance_tv);
         timeTv = (TextView) rootView.findViewById(R.id.time_tv);
 
+        CommonUtil.setCustomTypeFace(distanceTv);
+
         mWeekViewPager.addOnPageChangeListener(this);
         mWeekViewPager.setAdapter(mWeekPagerAdapter = new ViewPagerAdapter(weekPagerList = new ArrayList<View>()));
 
@@ -90,7 +88,8 @@ public class HistoryListGroupView extends LinearLayout implements ViewPager.OnPa
         }
         mWeekPagerAdapter.notifyDataSetChanged();
         mWeekViewPager.setCurrentItem(weekHistoryCountList.size());//跳到最后一页
-        initDataDiaplay(((HistoryListView)weekPagerList.get(weekPagerList.size() - 1)).getLineCount());
+        //initDataDiaplay(((HistoryListView)weekPagerList.get(weekPagerList.size() - 1)).getLineCount());
+        updateInfo();
     }
 
     /**
@@ -105,7 +104,6 @@ public class HistoryListGroupView extends LinearLayout implements ViewPager.OnPa
         }
         mMonthPagerAdapter.notifyDataSetChanged();
         mMonthViewPager.setCurrentItem(monthPagerList.size() - 1);
-
     }
 
     @Override
@@ -134,9 +132,8 @@ public class HistoryListGroupView extends LinearLayout implements ViewPager.OnPa
     /**
      * 首次初始化顶部内容的显示
      * 第一次切换标签页要用到
-     * @param day_count 展示的天数
      */
-    private void initDataDiaplay(int day_count){
+    /*private void initDataDiaplay(int day_count){
         //1.解析日期数据
         HistoryCount historyCount;
         String displayTime;
@@ -156,11 +153,12 @@ public class HistoryListGroupView extends LinearLayout implements ViewPager.OnPa
             totalLength += child.getTotal_length();
         }
         distanceTv.setText(CommonUtil.format2(totalLength / 1000));
-    }
+    }*/
 
-    private void switchData(){
+    private void switchViewPager(){
         mWeekViewPager.setVisibility(currentType == 0 ? View.VISIBLE : View.INVISIBLE);
         mMonthViewPager.setVisibility(currentType == 1 ? View.VISIBLE : View.INVISIBLE);
+        updateInfo();
     }
 
     @Override
@@ -168,7 +166,7 @@ public class HistoryListGroupView extends LinearLayout implements ViewPager.OnPa
         if(checkedId == R.id.tab_1){//切换到周统计
             if(currentType == 0) return;
             currentType = 0;
-            switchData();
+            switchViewPager();
         }else if(checkedId == R.id.tab_2){
             if(currentType == 1) return;//切换到月统计
             currentType = 1;
@@ -176,9 +174,9 @@ public class HistoryListGroupView extends LinearLayout implements ViewPager.OnPa
                 mMonthViewPager.setAdapter(mMonthPagerAdapter = new ViewPagerAdapter(monthPagerList = new ArrayList<View>()));
                 mMonthViewPager.addOnPageChangeListener(this);
                 loadMonthCount();
-                initDataDiaplay(((HistoryListView)monthPagerList.get(monthPagerList.size() - 1)).getLineCount());
+                //initDataDiaplay(((HistoryListView)monthPagerList.get(monthPagerList.size() - 1)).getLineCount());
             }
-            switchData();
+            switchViewPager();
         }
     }
 

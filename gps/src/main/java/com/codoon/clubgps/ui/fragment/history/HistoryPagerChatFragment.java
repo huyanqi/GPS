@@ -51,15 +51,22 @@ public class HistoryPagerChatFragment extends Fragment {
         List<PaceChatViewPojo> datas = new ArrayList<>();
         //获取公里数和平均配速
         List<HistoryGPSPoint> list = mHistoryDetail.findAllGPSPoints();
+
         int currentKm = 1;
         long pace = 0;//临时存储某一段公里的配速
         int count = 0;//存储某一段公里的打点数量
-        for(HistoryGPSPoint historyGPSPoint : list){
+        String kmUnit = getString(R.string.kilometers);
+        PaceChatViewPojo paceChatViewPojo = null;
+        HistoryGPSPoint historyGPSPoint;
+        for(int i=0;i<list.size();i++){
+            historyGPSPoint = list.get(i);
             count++;
             pace += historyGPSPoint.getPace();
             if(historyGPSPoint.getTotal_length() / 1000 > currentKm){
                 int km = CommonUtil.getKmNumber(historyGPSPoint.getTotal_length() / 1000);
-                datas.add(new PaceChatViewPojo(km+"", pace / count));
+                paceChatViewPojo = new PaceChatViewPojo(km+kmUnit, pace / count);
+                paceChatViewPojo.setLeftText(CommonUtil.getPaceTimeStr(pace / count));
+                datas.add(paceChatViewPojo);
                 currentKm = km + 1;
             }
             pace = 0;

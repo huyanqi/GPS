@@ -43,6 +43,10 @@ public class HistoryListHolder extends RecyclerView.ViewHolder {
         avgPaceTv.setText(CommonUtil.getPaceTimeStr(historyDetail.getAvg_pace()));
         durationTv.setText(CommonUtil.getPeriodTime(historyDetail.getTotal_time()));
         timeTv.setText(CommonUtil.parseTime(historyDetail.getStartTimesStamp()));
+
+        CommonUtil.setCustomTypeFace(distanceTv);
+        CommonUtil.setCustomTypeFace(avgPaceTv);
+        CommonUtil.setCustomTypeFace(durationTv);
     }
 
     public void updateTag(String month, String distance){

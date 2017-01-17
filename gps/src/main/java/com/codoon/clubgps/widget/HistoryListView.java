@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PathEffect;
 import android.graphics.Rect;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 
 import com.codoon.clubgps.R;
@@ -44,7 +45,7 @@ import java.util.List;
 
 public class HistoryListView extends View {
 
-    private String bgColor = "#2b2b34";
+    private int bottomTextColor;
 
     private HistoryCount mHistoryCount;
     private int lineCount;
@@ -63,7 +64,7 @@ public class HistoryListView extends View {
     private int eachWidth;//每个列的宽度
     private int startX;//开始x坐标
     private double max_length;//最大的树状图高度
-    private double min_length;//最小的树状图高度
+    private int min_length;//最小的树状图高度
     private List<HistoryListViewLine> lineList;
 
     private double totalLength;//当前界面展示数据的距离总长度
@@ -72,14 +73,17 @@ public class HistoryListView extends View {
     public HistoryListView(Context context, HistoryCount historyCount) {
         super(context);
         this.mHistoryCount = historyCount;
+        bottomTextColor = ContextCompat.getColor(getContext(), R.color.light_white);
         minWidth = CommonUtil.dip2px(8);
         yyyyMMddFormat = new SimpleDateFormat("yyyyMMdd");
 
         historyCountDataList = mHistoryCount.findChildren();
+
+        init();
     }
 
-    private void initLines() {
-        //1.根据类型判断需要展示的line数量
+    private void init(){
+        //1.初始化竖线数量
         if (mHistoryCount.getType() == 0) {
             //周榜
             lineCount = 7;//可以写死7天
@@ -90,6 +94,19 @@ public class HistoryListView extends View {
             lineCount = CommonUtil.getMonthDayCount(month);
         }
 
+        //2.初始化控件包含的时间段
+        if(mHistoryCount.getType() == 0){
+            currentTime = CommonUtil.getHistoryDisplayWeekTime(mHistoryCount.getTime(), lineCount);
+        }else{
+            currentTime = CommonUtil.getHistoryDisplayMonthTime(mHistoryCount.getTime());
+        }
+
+        //3.获取总长度、最大长度、最小长度
+        getMaxLength();
+
+    }
+
+    private void initLines() {
         eachWidth = chatRect.getWidth() / lineCount;//平均分配宽度
         startX = chatRect.getLeft() + eachWidth / 2;
 
@@ -103,19 +120,12 @@ public class HistoryListView extends View {
             startCalendar.add(Calendar.DAY_OF_YEAR, 1);
         }
 
-        //3.更新用于展示的时间段(M月d日-M月d日)
-        if(mHistoryCount.getType() == 0){
-            currentTime = CommonUtil.getHistoryDisplayWeekTime(mHistoryCount.getTime(), lineCount);
-        }else{
-            currentTime = CommonUtil.getHistoryDisplayMonthTime(mHistoryCount.getTime());
-        }
-
-        //4.更新line内容
+        //3.更新line内容
         for(HistoryCountData historyCountData : historyCountDataList){
             for(HistoryListViewLine historyListViewLine : lineList){
                 if(historyListViewLine.getTimeTag().equals(historyCountData.getTime())){
                     //更新高度
-                    historyListViewLine.updateHeight((int) (pxPerLength * historyCountData.getTotal_length() / 1000));
+                    historyListViewLine.updateHeight((int) (pxPerLength * historyCountData.getTotal_length() / 1000) + min_length);
 
                     //如果是公里数最多的那天，就要显示公里数在顶部
                     if(historyCountData.getTotal_length() / 1000 == max_length){
@@ -125,22 +135,17 @@ public class HistoryListView extends View {
             }
         }
 
-        setBackgroundColor(Color.parseColor(bgColor));
+        setBackgroundColor(ContextCompat.getColor(getContext(), R.color.dark_gray_bg));
     }
 
     private void getMaxLength() {
         totalLength = 0;
         if(historyCountDataList.size() == 0) return;
-        min_length = historyCountDataList.get(0).getTotal_length() / 1000;
         for (HistoryCountData historyCountData : historyCountDataList) {
             totalLength += historyCountData.getTotal_length();
 
             max_length = historyCountData.getTotal_length() / 1000 > max_length ? historyCountData.getTotal_length() / 1000 : max_length;
-            min_length = historyCountData.getTotal_length() / 1000 < min_length ? historyCountData.getTotal_length() / 1000 : min_length;
         }
-
-        if(min_length > max_length / 40)
-            min_length = max_length / 40;//默认的高度是最大高度的1/40
 
     }
 
@@ -156,8 +161,10 @@ public class HistoryListView extends View {
         chatRect.set(left, 0, right, getMeasuredHeight() - CommonUtil.dip2px(rectMarginBottomDP));
 
         //2.计算出最大刻度值
-        getMaxLength();
         chatRect.getPxPerLength(max_length);
+
+        //3.
+        min_length = chatRect.getHeight() / 40;
 
     }
 
@@ -169,8 +176,8 @@ public class HistoryListView extends View {
      */
     private HistoryListViewLine getLine(int index, String timeTag) {
         int x = startX + (index * eachWidth);
-        HistoryListViewLine line = new HistoryListViewLine(x, minWidth, timeTag, chatRect.getBottom());
-        line.updateHeight((int) (pxPerLength * min_length));
+        HistoryListViewLine line = new HistoryListViewLine(x, minWidth, timeTag, chatRect.getBottom(), bottomTextColor);
+        line.updateHeight(min_length);
         if(mHistoryCount.getType() == 0){
             line.setBottomText(getContext().getString(CommonUtil.getResource("week_"+(index+1), "string")));
         }else{
@@ -214,7 +221,6 @@ public class HistoryListView extends View {
         int type = mHistoryCount.getType();
 
         Calendar startCalendar = Calendar.getInstance();
-        startCalendar.setFirstDayOfWeek(Calendar.MONTH);
         SimpleDateFormat sdf = null;
         if(type == 0){
             sdf = new SimpleDateFormat("yyyyw");
@@ -224,6 +230,12 @@ public class HistoryListView extends View {
         }
         try {
             startCalendar.setTime(sdf.parse(date));
+
+            if(type == 0){
+                //默认的每周第一天是周日，需要手动+1跳过这一天，我们要的是周一
+                startCalendar.add(Calendar.DAY_OF_YEAR, 1);
+            }
+
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -234,7 +246,6 @@ public class HistoryListView extends View {
 
         private Rect mRect;
         private String bgColor = "#33323C";
-        private String ruleColor = "#CCCCCC";
 
         private Paint bgPaint;//背景画笔
         private Paint ruleTextPaint;//刻度文字画笔
@@ -250,13 +261,13 @@ public class HistoryListView extends View {
             bgPaint.setColor(Color.parseColor(bgColor));
 
             ruleTextPaint = new Paint();
-            ruleTextPaint.setColor(Color.parseColor(ruleColor));
+            ruleTextPaint.setColor(ContextCompat.getColor(getContext(), R.color.light_white));
             ruleTextPaint.setAntiAlias(true);
             ruleTextPaint.setTextSize(CommonUtil.dip2px(11));
 
             linePaint = new Paint();
             linePaint.setStyle(Paint.Style.STROKE);
-            linePaint.setColor(Color.WHITE);
+            linePaint.setColor(ContextCompat.getColor(getContext(), R.color.dottet_line));
             linePaint.setStrokeWidth(1);
 
         }
@@ -271,6 +282,10 @@ public class HistoryListView extends View {
 
         public int getBottom() {
             return mRect.bottom;
+        }
+
+        public int getHeight(){
+            return mRect.height();
         }
 
         /**
@@ -329,14 +344,15 @@ public class HistoryListView extends View {
         private void drawRuleLine(int value, Canvas canvas){
             float ruleY = (float) (value * pxPerLength);
             Path path = new Path();
-            path.moveTo(mRect.left, mRect.bottom - ruleY);
-            path.lineTo(mRect.right ,mRect.bottom - ruleY);
+            float y = mRect.bottom - ruleY + min_length;
+            path.moveTo(mRect.left, y);
+            path.lineTo(mRect.right , y);
             PathEffect effects = new DashPathEffect(new float[]{ 6, 6, 6, 6}, 1);
             linePaint.setPathEffect(effects);
 
             canvas.drawPath(path, linePaint);
 
-            canvas.drawText(value+GPSApplication.getContext().getString(R.string.kilometers), mRect.left, mRect.bottom - ruleY - 5, ruleTextPaint);
+            canvas.drawText(value+GPSApplication.getContext().getString(R.string.kilometers), mRect.left, y , ruleTextPaint);//baseline和虚线对其
 
         }
 

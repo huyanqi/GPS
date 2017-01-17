@@ -5,6 +5,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.codoon.clubgps.application.GPSApplication;
+import com.codoon.clubgps.util.CommonUtil;
 import com.codoon.clubgps.util.FileUtil;
 
 import org.litepal.annotation.Column;
@@ -95,6 +96,8 @@ public class HistoryDetail extends DataSupport implements Parcelable {
 
             total_calories += gpsPoint.getCalories();
         }
+
+        total_calories = Double.parseDouble(CommonUtil.format1(total_calories));//保留2位小数
 
         total_length = gpsPointList.get(gpsPointList.size() - 1).getTotal_length();//取最后一个点的距离为总距离
         startTimesStamp = gpsPointList.get(0).getTimestamp();

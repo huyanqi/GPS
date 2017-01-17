@@ -12,8 +12,8 @@
     <RelativeLayout
         android:id="@+id/content_ly"
         android:layout_width="match_parent"
-        android:visibility="invisible"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="invisible">
 
         <ImageButton
             android:id="@+id/close_view"
@@ -61,6 +61,7 @@
                     android:layout_alignBottom="@id/distance_tv"
                     android:layout_toRightOf="@id/distance_tv"
                     android:text="@string/kilometers"
+                    android:layout_alignBaseline="@id/distance_tv"
                     android:textColor="@color/white"
                     android:textSize="14sp"
                     android:textStyle="bold"/>

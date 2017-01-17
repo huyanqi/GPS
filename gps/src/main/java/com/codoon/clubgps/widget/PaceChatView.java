@@ -20,7 +20,9 @@ import com.codoon.clubgps.bean.PaceChatViewPojo;
 import com.codoon.clubgps.util.CommonUtil;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Frankie on 2017/1/13.
@@ -31,9 +33,11 @@ public class PaceChatView extends View {
     private float lineSmoothness = 0.1f;
     private List<PaceChatViewPojo> datas;
     private float maxValue;
+    private float minValue;
+    private boolean maxDraw,minDraw;//避免最大、最小值重复绘制
     private RectF bgRect;
 
-    private int[] lineColors = new int[]{0xffF85445, 0xffd8d552, 0xff79E05C};
+    private int[] lineColors = new int[]{0xff79E05C, 0xffd8d552, 0xffF85445};
     private float[] levels;
 
     private Paint bgPaint;
@@ -88,6 +92,22 @@ public class PaceChatView extends View {
 
     public void setDatas(List<PaceChatViewPojo> datas){
         this.datas = datas;
+        //解析一次数据，为了避免底部文本过多导致文字重叠，限制底部最多显示4个文本
+        double max_count = 4;
+        if(datas.size() > max_count){
+            int offset = (int) (datas.size() / max_count);
+            Set<Integer> indexs = new HashSet<Integer>();
+            for(int i=1;i<max_count+1;i++){
+                indexs.add(offset * i);
+            }
+            PaceChatViewPojo updatePojo;
+            for(int i=0;i<datas.size();i++){
+                if(!indexs.contains(i+1)){
+                    updatePojo = datas.get(i);
+                    updatePojo.setText("");//•
+                }
+            }
+        }
     }
 
     private void init(){
@@ -111,7 +131,7 @@ public class PaceChatView extends View {
 
         mLineColors = new int[datas.size()];
         for(int i=0;i<datas.size();i++){
-            mLineColors[i] = lineColors[getLevel(datas.get(i).getValue())];
+            mLineColors[i] = lineColors[getLevel(datas.get(i).getLeftValue())];
         }
     }
 
@@ -141,15 +161,18 @@ public class PaceChatView extends View {
         rect.set(0, 0, mWidth, mHeight);
         canvas.drawRect(rect, bgPaint);
 
+        if(datas.size() == 0){
+            drawNoData(rect, canvas);
+            return;
+        }
+
         mPointList = new ArrayList<>();
         Point mPoint;
-        float[] values = new float[datas.size()];
         for(int i=0;i<datas.size();i++){
             startDraw(i, datas.get(i), canvas);
-            values[i] = datas.get(i).getValue();
 
             float x = getLineX(i);
-            float y = getLineY(values[i]);
+            float y = getLineY(datas.get(i).getLeftValue());
             mPoint = new Point();
             mPoint.set((int)x, (int)y);
             mPointList.add(mPoint);
@@ -159,9 +182,14 @@ public class PaceChatView extends View {
 
     }
 
+    private void drawNoData(Rect rect, Canvas canvas){
+        textPaint.setTextAlign(Paint.Align.CENTER);
+        canvas.drawText(getResources().getString(R.string.no_chat_data), rect.width() / 2 , rect.height() / 2, textPaint);//y坐标需要特殊处理baseline
+    }
+
     private void startDraw(int index, PaceChatViewPojo paceChatViewPojo, Canvas canvas){
-        drawLeft(paceChatViewPojo.getValue(), canvas);
-        drawText(index, paceChatViewPojo.getText(), canvas);
+        drawLeft(paceChatViewPojo, canvas);
+        drawBottomText(index, paceChatViewPojo.getText(), canvas);
     }
 
     private void drawBazier(Canvas canvas){
@@ -261,6 +289,12 @@ public class PaceChatView extends View {
         tmpPaint.setColor(mLineColors[mLineColors.length-1]);
         canvas.drawLine(lastPoint.x - tmpPaint.getStrokeWidth() / 2, lastPoint.y, bgRect.right, lastPoint.y, tmpPaint);
 
+        //如果只有一个渐变颜色，会报错
+        if(mLineColors.length == 1){
+            int color = mLineColors[0];
+            mLineColors = new int[]{color, color};
+        }
+
         linePaint.setShader(new LinearGradient(getLineX(0), 0, lastPoint.x, 0, mLineColors, null, Shader.TileMode.MIRROR));
         canvas.drawPath(mPath, linePaint);
 
@@ -275,12 +309,22 @@ public class PaceChatView extends View {
     private RectF getBgRect(){
         RectF rect = new RectF();
         //1.获取最大value(方便计算左侧需要留出的空间)
+        String maxWidthText = "";
+        minValue = datas.get(0).getLeftValue();
         for(PaceChatViewPojo pojo : datas){
-            maxValue = Math.max(maxValue, pojo.getValue());
+            maxValue = Math.max(maxValue, pojo.getLeftValue());
+            minValue = Math.min(minValue, pojo.getLeftValue());
+            if(CommonUtil.getTextWitdh(pojo.getLeftText(), textPaint) > CommonUtil.getTextWitdh(maxWidthText, textPaint)){
+                maxWidthText = pojo.getLeftText();
+            }
+        }
+
+        if(datas.size() == 1){
+            maxValue *= 2;//如果只有一个点，需要放置到纵向的居中位置
         }
 
         //2.计算左侧需要的宽度
-        float xOffset = textPaint.measureText(maxValue+"") + verticalValuePadding * 2;
+        float xOffset = textPaint.measureText(maxWidthText) + verticalValuePadding * 2;
 
         //3.计算底部需要的高度
         float yOffset = CommonUtil.getTextHeight("0", textPaint) + verticalValuePadding * 2;
@@ -290,19 +334,34 @@ public class PaceChatView extends View {
         return rect;
     }
 
-    private void drawLeft(float value, Canvas canvas){
+    private void drawLeft(PaceChatViewPojo pojo, Canvas canvas){
+        //(只画最大值和最小值)
+        if(maxDraw && minDraw) return;
+        float leftValue = pojo.getLeftValue();
+        if(!maxDraw && leftValue == maxValue){
+            drawLeftTextAndLine(pojo, canvas);
+            maxDraw = true;
+        }
+
+        if(!minDraw && leftValue == minValue){
+            drawLeftTextAndLine(pojo, canvas);
+            minDraw = true;
+        }
+    }
+
+    private void drawLeftTextAndLine(PaceChatViewPojo pojo, Canvas canvas){
         //1.画文字
-        float y = getLineY(value) + leftTextHeight / 2;
-        canvas.drawText(value+"", verticalValuePadding, y, textPaint);
+        float y = getLineY(pojo.getLeftValue()) + leftTextHeight / 2;
+        canvas.drawText(pojo.getLeftText(), verticalValuePadding, y, textPaint);
         //2.画虚线
         Path path = new Path();
-        float lineY = getLineY(value);
+        float lineY = getLineY(pojo.getLeftValue());
         path.moveTo(bgRect.left, lineY);
         path.lineTo(bgRect.right, lineY);
         canvas.drawPath(path, dottePaint);
     }
 
-    private void drawText(int index, String text, Canvas canvas){
+    private void drawBottomText(int index, String text, Canvas canvas){
         float[] xb = getXAndBaseLine(index, text);
         canvas.drawText(text, xb[0], xb[1], textPaint);
     }

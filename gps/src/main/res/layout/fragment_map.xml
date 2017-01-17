@@ -60,5 +60,13 @@
 
     </RelativeLayout>
 
+    <com.codoon.clubgps.widget.ThreeTwoOneView
+        android:id="@+id/three_twe_one_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:clickable="true"
+        android:background="#55333333"/>
+
 </FrameLayout>
 

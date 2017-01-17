@@ -70,6 +70,7 @@
     <string name="hello_blank_fragment">临时存在的string""</string>
 
     <string name="run_outdoor">室外跑步</string>
+    <string name="no_chat_data">没有图表生成</string>
 
     <string-array name="detail_tab_titles">
         <item>轨迹</item>

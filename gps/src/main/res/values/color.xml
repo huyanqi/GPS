@@ -5,7 +5,7 @@
     <color name="white">#FFFFFF</color>
 
     <!--浅白色-->
-    <color name="light_white">#79798E</color>
+    <color name="light_white">#79798e</color>
 
     <!--浅黑色-->
     <color name="light_dark">#494958</color>
@@ -25,7 +25,14 @@
     <!-- 浅灰色背景-->
     <color name="light_gray_bg">#30303A</color>
 
+    <!-- 深灰色背景-->
+    <color name="dark_gray_bg">#303039</color>
+
     <!-- 控件里虚线颜色-->
-    <color name="dottet_line">#373743</color>
+    <color name="dottet_line">#3B3B3B</color>
+
+    <color name="bg_three_two_one">#BBFFFFFF</color>
+
+    <color name="blue">#00BBF9</color>
     
 </resources>

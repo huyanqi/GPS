@@ -108,6 +108,15 @@ public class CommonUtil {
     }
 
     /**
+     * 使用DecimalFormat,保留小数点后1位
+     */
+    public static String format1(double value) {
+        DecimalFormat df = new DecimalFormat("0.0");
+        df.setRoundingMode(RoundingMode.HALF_UP);
+        return df.format(value);
+    }
+
+    /**
      * 使用DecimalFormat,保留小数点后两位
      */
     public static String format2(double value) {
@@ -157,10 +166,10 @@ public class CommonUtil {
         Date date = new Date(timestamp);
         Context context = GPSApplication.getContext();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy" + context.getString(R.string.date_year)
-                + "MM" + context.getString(R.string.date_month)
+                + "M" + context.getString(R.string.date_month)
                 + "dd" + context.getString(R.string.date_day)
-                + " HH" + context.getString(R.string.date_hour)
-                + "mm" + context.getString(R.string.date_minute));
+                + " H" + ":" //context.getString(R.string.date_hour)
+                + "mm" + "");//context.getString(R.string.date_minute)
         return sdf.format(date);
     }
 

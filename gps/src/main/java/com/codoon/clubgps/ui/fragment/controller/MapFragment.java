@@ -30,6 +30,7 @@ import com.codoon.clubgps.util.CommonUtil;
 import com.codoon.clubgps.util.Constant;
 import com.codoon.clubgps.util.GPSSignal;
 import com.codoon.clubgps.util.LogUtil;
+import com.codoon.clubgps.widget.ThreeTwoOneView;
 import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
@@ -58,6 +59,8 @@ public class MapFragment extends com.amap.api.maps.MapFragment implements View.O
     private LatLngBounds.Builder builder;
     private long lastMoveCenterTime = System.currentTimeMillis();
     private LatLng lastGPSPoint;//最后一次打的点
+
+    private ThreeTwoOneView mThreeTwoOneView;
 
     private int mPointSize;//记录打点个数
 
@@ -170,6 +173,7 @@ public class MapFragment extends com.amap.api.maps.MapFragment implements View.O
         screenWidth = CommonUtil.getScreenWidth(GPSApplication.getAppContext());
         screenHeight = CommonUtil.getScreenHeight(GPSApplication.getAppContext());
 
+        mThreeTwoOneView = (ThreeTwoOneView) rootView.findViewById(R.id.three_twe_one_view);
         gpsNoSignalTipsTv = (TextView) rootView.findViewById(R.id.gps_no_signal_tips);
 
         rootView.findViewById(R.id.close_btn).setOnClickListener(this);
@@ -238,6 +242,7 @@ public class MapFragment extends com.amap.api.maps.MapFragment implements View.O
     }
 
     public void showOrHide(final boolean isShow) {
+        if(rootView.isShown() == isShow) return;
         int finalRadius = Math.max(rootView.getWidth(), rootView.getHeight());
         if (rootView.getWidth() == 0) {
             finalRadius = Math.max(screenWidth, screenHeight);
@@ -300,11 +305,11 @@ public class MapFragment extends com.amap.api.maps.MapFragment implements View.O
         }
 
         if(isDefaultMove){
-            //第一次进入地图，需要移动地图到上次缓存位置
+            //第一次进入地图，需要默认移动地图到上次缓存位置
             moveToMyLocation();
         }else{
             lastMoveCenterTime = System.currentTimeMillis();
-            moveToCenter();
+            moveToCenter(500);
         }
 
     }
@@ -315,7 +320,7 @@ public class MapFragment extends com.amap.api.maps.MapFragment implements View.O
     private void moveToMyLocation(){
         LatLng myLatLng = new LatLng(mCurrentLat, mCurrentLng);
         CameraPosition myPosition = new CameraPosition(myLatLng, 17, 0, 0);
-        mAMap.animateCamera(CameraUpdateFactory.newCameraPosition(myPosition), 500, null);
+        mAMap.moveCamera(CameraUpdateFactory.newCameraPosition(myPosition));
         markMyPoint(myLatLng);
     }
 
@@ -331,10 +336,14 @@ public class MapFragment extends com.amap.api.maps.MapFragment implements View.O
     /**
      * 将我的路线移动到地图中央
      */
-    private void moveToCenter(){
+    private void moveToCenter(long duration){
         if(mPointSize < 2) return;
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(builder.build(), screenWidth, screenHeight, CommonUtil.dip2px(60));
-        mAMap.animateCamera(cameraUpdate, 500, null);
+        if(duration == 0){
+            mAMap.moveCamera(cameraUpdate);
+        }else{
+            mAMap.animateCamera(cameraUpdate, duration, null);
+        }
     }
 
     @Override
@@ -345,6 +354,25 @@ public class MapFragment extends com.amap.api.maps.MapFragment implements View.O
 
         Logger.i("退出地图，一共打点 "+ mPointSize +" 个");
         super.onDestroy();
+    }
+
+    public void startCountDown() {
+        //开始倒计时
+        mThreeTwoOneView.setVisibility(View.VISIBLE);
+        mThreeTwoOneView.setOnAnimFinishListener(new ThreeTwoOneView.OnAnimFinishListener() {
+            @Override
+            public void onAnimFinished() {
+                mControllerActivity.sportResume();
+                showOrHide(false);
+                mThreeTwoOneView.setVisibility(View.GONE);
+            }
+        });
+        mThreeTwoOneView.start();
+    }
+
+    public void getMapScreenShot(AMap.OnMapScreenShotListener listener){
+        moveToCenter(0);
+        mAMap.getMapScreenShot(listener);
     }
 
 }

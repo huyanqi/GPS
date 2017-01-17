@@ -44,15 +44,17 @@
                 android:layout_alignParentRight="true"
                 android:textColor="@color/light_white"
                 android:textSize="16sp"
-                android:layout_alignBottom="@id/time_tv"
+                android:layout_alignBaseline="@id/time_tv"
                 android:text="@string/kilometers"/>
 
             <TextView
+                android:id="@+id/distance_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
                 android:textSize="40sp"
                 android:layout_marginRight="3dp"
+                android:layout_alignBaseline="@id/distance_unit_tv"
                 android:layout_toLeftOf="@id/distance_unit_tv"
                 android:layout_alignBottom="@id/distance_unit_tv"
                 android:text="0.00"/>
@@ -148,7 +150,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:textColor="@color/light_dark"
-                android:text="@string/unit_speed"
+                android:text="@string/speed"
                 android:textSize="10sp"/>
 
             <TextView

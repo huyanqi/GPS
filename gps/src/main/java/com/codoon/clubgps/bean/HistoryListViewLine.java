@@ -1,7 +1,6 @@
 package com.codoon.clubgps.bean;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Shader;
@@ -36,7 +35,7 @@ public class HistoryListViewLine {
     private Paint gradientPaint;
 
     private HistoryListViewLine(){}
-    public HistoryListViewLine (int x, int width, String timeTag, int chatRectBottom) {
+    public HistoryListViewLine (int x, int width, String timeTag, int chatRectBottom, int textColor) {
         this.x = x;
         this.width = width;
         this.timeTag = timeTag;
@@ -47,7 +46,7 @@ public class HistoryListViewLine {
 
         bottomTextPaint = new Paint();
         bottomTextPaint.setAntiAlias(true);
-        bottomTextPaint.setColor(Color.BLUE);
+        bottomTextPaint.setColor(textColor);
         bottomTextPaint.setTextSize(CommonUtil.dip2px(12));
         bottomTextPaint.setTextAlign(Paint.Align.CENTER);
 
@@ -61,12 +60,6 @@ public class HistoryListViewLine {
     public void updateHeight(int height){
         y = chatRectBottom - height;
         this.height = height;
-        mShader = new LinearGradient(width , y, width, y + height, gradientStartColor, gradientEndColor, Shader.TileMode.MIRROR);
-        gradientPaint.setShader(mShader);
-    }
-
-    public void updateWidth(int width){
-        this.width = width;
         mShader = new LinearGradient(width , y, width, y + height, gradientStartColor, gradientEndColor, Shader.TileMode.MIRROR);
         gradientPaint.setShader(mShader);
     }
