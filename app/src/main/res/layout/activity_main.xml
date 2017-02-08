@@ -26,4 +26,16 @@
         android:layout_height="wrap_content"
         android:text="跑步历史"/>
 
+    <Button
+        android:id="@+id/test_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Test"/>
+
+    <com.codoon.clubcodoongps.widget.CalendarGroupView
+        android:id="@+id/calendar_gv"
+        android:layout_width="match_parent"
+        android:layout_height="100dp" />
+
+
 </LinearLayout>

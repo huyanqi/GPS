@@ -362,7 +362,7 @@ public class MapFragment extends com.amap.api.maps.MapFragment implements View.O
         mThreeTwoOneView.setOnAnimFinishListener(new ThreeTwoOneView.OnAnimFinishListener() {
             @Override
             public void onAnimFinished() {
-                mControllerActivity.sportResume();
+                mControllerActivity.sportResume(true);
                 showOrHide(false);
                 mThreeTwoOneView.setVisibility(View.GONE);
             }

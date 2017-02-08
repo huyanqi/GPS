@@ -24,6 +24,7 @@ import com.codoon.clubgps.util.Constant;
 import com.codoon.clubgps.util.GPSSignal;
 import com.codoon.clubgps.util.PermissionUtils;
 import com.codoon.clubgps.util.ToastUtil;
+import com.codoon.clubgps.util.VoicePlayer;
 
 import org.litepal.crud.DataSupport;
 
@@ -43,6 +44,8 @@ public class GPSControllerActivity extends AppCompatActivity implements GPSServi
     public MapFragment mMapFragment;
     public ControllerFragment mControllerFragment;
     private boolean mapIsShowing = true;
+
+    private VoicePlayer mVoicePlayer;
 
     /**
      * 路线相关
@@ -109,14 +112,21 @@ public class GPSControllerActivity extends AppCompatActivity implements GPSServi
      */
     public void sportPause() {
         if (mGPSService == null) return;
+        mVoicePlayer.runPause();
         mGPSService.sportPause();
     }
 
     /**
      * 运动继续
+     * @param isFirst true:开始运动 false:继续运动
      */
-    public void sportResume() {
+    public void sportResume(boolean isFirst) {
         if (mGPSService == null) return;//有可能service还没绑定成功，MapFragment就已经开始加载完成了
+        if(isFirst){
+            mVoicePlayer.runStart();
+        }else{
+            mVoicePlayer.runResume();
+        }
         mGPSService.sportResume();
         startRunTimer();
     }
@@ -182,6 +192,8 @@ public class GPSControllerActivity extends AppCompatActivity implements GPSServi
             mGPSService = ((GPSService.GPSBinder) service).getGPSService();
             mGPSService.setOnGPSLocationChangedListener(GPSControllerActivity.this);
             mGPSService.initGPSLocation();//初始化GPS定位
+
+            mVoicePlayer = VoicePlayer.getInstance();
 
             boolean isContinue = checkIsContinue();
             if(isContinue){

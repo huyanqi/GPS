@@ -112,7 +112,7 @@ public class ControllerFragment extends Fragment implements View.OnClickListener
         AnimUtil.alpha(pauseIv, false);
         AnimUtil.alpha(resumeIv, true);
         AnimUtil.alpha(stopIv, true);
-        mControllerActivity.sportResume();
+        mControllerActivity.sportResume(false);
     }
 
     private void sportStop(){
