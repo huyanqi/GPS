@@ -1,46 +1,47 @@
 package com.codoon.clubcodoongps;
 
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 
-public class TestActivity extends AppCompatActivity implements View.OnClickListener {
+import com.codoon.clubcodoongps.adapter.PaceChatAdapter;
+import com.codoon.clubgps.bean.PaceChatBean;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class TestActivity extends AppCompatActivity {
+
+    private RecyclerView mRecyclerView;
+    private PaceChatAdapter mAdapter;
+    private List<PaceChatBean> mList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
-        findViewById(R.id.start).setOnClickListener(this);
+        init();
     }
 
-    @Override
-    public void onClick(View v) {
-        Intent intent = new Intent(this, TestService.class);
-        bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
-    }
+    private void init(){
+        mRecyclerView = (RecyclerView) findViewById(R.id.recycle_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setAdapter(mAdapter = new PaceChatAdapter(this, mList = new ArrayList<PaceChatBean>()));
 
-    private ServiceConnection mServiceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            TestService testService = ((TestService.TestServiceBinder)service).getService();
-            testService.daojishi(10);
-        }
+        mList.add(new PaceChatBean(1, 88, 12, ""));
+        mList.add(new PaceChatBean(2, 178, 45, ""));
+        mList.add(new PaceChatBean(3, 92, 231, ""));
+        mList.add(new PaceChatBean(4, 68, 34, ""));
+        mList.add(new PaceChatBean(5, 68, 67, ""));
+        mList.add(new PaceChatBean(5, 68, 67, ""));
+        mList.add(new PaceChatBean(0, 0, 0, "5公里 00:08:33"));
+        mList.add(new PaceChatBean(6, 68, 17, ""));
+        mList.add(new PaceChatBean(7, 68, 37, ""));
 
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-
-        }
-    };
-
-    @Override
-    protected void onDestroy() {
-        unbindService(mServiceConnection);
-        super.onDestroy();
+        mAdapter.setMaxDuration(231);
+        mAdapter.setMaxPace(68);
+        mAdapter.notifyDataSetChanged();
     }
 
 }

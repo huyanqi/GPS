@@ -87,6 +87,8 @@ public class GPSControllerActivity extends AppCompatActivity implements GPSServi
         mMapFragment.onNewPoint(newGpsPoint);
         //4.更新controller
         runningDuration(newGpsPoint);
+
+        mVoicePlayer.updateLength(runDistance);
     }
 
     @Override
@@ -137,9 +139,10 @@ public class GPSControllerActivity extends AppCompatActivity implements GPSServi
     public void sportStop() {
         //先做跳转判断,如果运动距离太短，直接退出当前界面，否则跳转进运动预览界面
         int count = DataSupport.count(GPSPoint.class);
-        if (count >= savePointPer) {
+        if (runDistance >= 10) {
             //已有运动记录产生
             //先保存还未保存的点
+            mVoicePlayer.runFinish();
             savePoints2DB(mGPSPoints);
             mGPSPoints.clear();
             //跳转
@@ -375,6 +378,7 @@ public class GPSControllerActivity extends AppCompatActivity implements GPSServi
                         @Override
                         public void run() {
                             runTime++;
+                            mVoicePlayer.updateDuration(runTime);
                             mControllerFragment.updateRunDuration(CommonUtil.getPeriodTime(runTime));
                         }
                     });

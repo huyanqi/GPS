@@ -30,13 +30,28 @@ public class VoicePlayer {
     private Context mContext;
     private String soundPath;//临时保存被合成后提示音的文件
     private MediaPlayer mPlayer;
+    private VoiceUtil mVoiceUtil;//数字转播报工具
+
+    private int duration;//已耗时
+    private double total_length;//跑步总距离,单位:米
+
+    private int lastDuration;//最后一公里耗时
+    private int lastDistanceKm;//最后播报的公里数,默认0，等跑到整数公里数时候再播报
+
 
     private VoicePlayer (){
         mContext = GPSApplication.getContext();
         soundPath = getGpsSounudPath();
+        initVoiceUtil();
         if (!(new File(soundPath).exists())) {
             new File(soundPath).mkdir();
         }
+    }
+
+    private void initVoiceUtil(){
+        int[] units = new int[]{0, SHI, BAI, QIAN, WAN};
+        int[] nText = new int[]{LING, YI, ER, SAN, SI, WU, LIU, QI, BA, JIU};
+        mVoiceUtil = new VoiceUtil(units, nText, DIAN, XIAOSHI, FENZHONG, MIAO);
     }
 
     public static VoicePlayer getInstance(){
@@ -61,12 +76,94 @@ public class VoicePlayer {
         playSounds(YUNDONGYIHUIFU);
     }
 
+    public void runFinish(){
+        playSounds(FANGSONGYIXIABA);
+    }
+
+    public void updateDuration(int duration){
+        this.duration = duration;
+        System.out.println("updateDuratin:"+duration);
+        if(duration % (30) == 0){//60  * 5
+            //每5分钟播放一次
+            playDurationVoice(duration);
+        }
+    }
+
+    public void updateLength(double total_length){
+        this.total_length = total_length;
+        System.out.println("updateLength:"+total_length);
+        int kmNum = CommonUtil.getKmNumber(total_length / 1000);
+        if(kmNum > lastDistanceKm){
+            playKmVoice(kmNum, duration);
+            lastDistanceKm = kmNum;
+            lastDuration = duration;
+        }
+
+    }
+
+    /**
+     * 播报公里数
+     * @param length 公里数,单位:km
+     * @duration 耗时,单位:s
+     */
+    private void playKmVoice(double length, int duration){
+        playKmSound(mVoiceUtil.numToList(length), mVoiceUtil.timeToList(duration));
+    }
+
+    /**
+     * 播报用时
+     * @param duration 耗时,单位:s
+     */
+    private void playDurationVoice(int duration){
+        playDurationSound(mVoiceUtil.timeToList(duration), mVoiceUtil.timeToList(lastDuration));
+    }
+
+    private void playDurationSound(List<Integer> durationVoice, List<Integer> lastKmDurationVoice) {
+        List<Integer> res = new ArrayList<>();
+        res.add(DINGDONG);
+        res.add(NIYIJING);
+        res.add(YONGSHI);
+        for(Integer lres : durationVoice){
+            res.add(lres);
+        }
+        if(lastKmDurationVoice.size() > 0){//有最近一公里播报记录
+            res.add(ZUIJINYIGONGLI);
+            res.add(YONGSHI);
+            for(Integer lres : lastKmDurationVoice){
+                res.add(lres);
+            }
+        }
+
+        playSounds(res);
+    }
+
     private void playSounds(int... sounds){
         List<Integer> sourdsList = new ArrayList<>();
         for(int souds : sounds){
             sourdsList.add(souds);
         }
         playSounds(sourdsList);
+    }
+
+    /**
+     * 合成公里播报
+     * @param lengthVoice 距离语音
+     * @param durationVoice 耗时语音
+     */
+    private void playKmSound(List<Integer> lengthVoice, List<Integer> durationVoice){
+        List<Integer> res = new ArrayList<>();
+        res.add(DINGDONG);
+        res.add(NIYIJING);
+        res.add(PAOBU);
+        for(Integer lres : lengthVoice){
+            res.add(lres);
+        }
+        res.add(GONGLI);
+        res.add(YONGSHI);
+        for(Integer dres : durationVoice){
+            res.add(dres);
+        }
+        playSounds(res);
     }
 
     /**
@@ -111,6 +208,7 @@ public class VoicePlayer {
     int KAISHIPAOBU = R.raw.run_start;
     int YUNDONGYIZANTING = R.raw.sport_pause;
     int YUNDONGYIHUIFU = R.raw.sport_continue;
+    int FANGSONGYIXIABA = R.raw.exercise_to_relax;
     int LING = R.raw.number_0;
     int YI = R.raw.number_1;
     int ER = R.raw.number_2;
@@ -125,6 +223,20 @@ public class VoicePlayer {
     int BAI = R.raw.number_100;
     int QIAN = R.raw.number_1000;
     int WAN = R.raw.number_10000;
+    int GONGLI = R.raw.kilometer;
+    int MI = R.raw.meter;
+    int XIAOSHI = R.raw.hour;
+    int FENZHONG = R.raw.minute;
+    int MIAO = R.raw.second;
+    int PAOBU = R.raw.run;
+    int NIYIJING = R.raw.you_have_already;
+    int YONGSHI = R.raw.spend_time;
+    int ZUIJINYIGONGLI = R.raw.nearbyonemile;
+    int DIAN = R.raw.dot;
+    int YUNDONG = R.raw.sports;
+    int GONGLIMEIXIAOSHI = R.raw.km_hour;
+    int PINGJUNSUDU = R.raw.averagespeed;
+    int DINGDONG = R.raw.dingdong;
 
     private String getGpsSounudPath() {
         File sharePath;
@@ -152,6 +264,7 @@ public class VoicePlayer {
         Vector<InputStream> v = new Vector<InputStream>();
 
         for (Integer source : preFactories) {
+            if(source.equals(0)) continue;
             v.add(mContext.getResources().openRawResource(source));
         }
         Enumeration<InputStream> en = v.elements();
@@ -161,7 +274,7 @@ public class VoicePlayer {
         byte[] buf = new byte[1024];
         int len;
         while ((len = seq.read(buf)) != -1) {
-            fos.write(buf);
+            fos.write(buf, 0, len);
         }
         fos.close();
         seq.close();

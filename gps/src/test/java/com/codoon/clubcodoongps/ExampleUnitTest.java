@@ -1,5 +1,7 @@
 package com.codoon.clubcodoongps;
 
+import com.codoon.clubgps.util.TestUtil;
+
 import org.junit.Test;
 
 import java.text.ParseException;
@@ -15,8 +17,14 @@ import java.util.Date;
 public class ExampleUnitTest {
     @Test
     public void testgogogo() throws Exception {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-        System.out.println(getHistoryDisplayWeekTime("201653", 7));
+        TestUtil testUtil = new TestUtil();
+        System.out.println(testUtil.numToCN(100));
+    }
+
+    @Test
+    public void test_time (){
+        TestUtil testUtil = new TestUtil();
+        System.out.println(testUtil.timeToText(3601));
     }
 
     public String getHistoryDisplayWeekTime(String time, int day_count) {

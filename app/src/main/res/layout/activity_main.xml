@@ -1,41 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/run_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="开始跑步"/>
-
-    <ToggleButton
-        android:id="@+id/fake_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textOn="GPS模拟已打开"
-        android:textOff="GPS模拟已关闭"/>
-
-    <Button
-        android:id="@+id/record_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="跑步历史"/>
-
-    <Button
-        android:id="@+id/test_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Test"/>
-
-    <com.codoon.clubcodoongps.widget.CalendarGroupView
-        android:id="@+id/calendar_gv"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
+        <Button
+            android:id="@+id/run_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="开始跑步"/>
 
-</LinearLayout>
+        <ToggleButton
+            android:id="@+id/fake_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textOn="GPS模拟已打开"
+            android:textOff="GPS模拟已关闭"/>
+
+        <Button
+            android:id="@+id/record_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="跑步历史"/>
+
+        <Button
+            android:id="@+id/test_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Test"/>
+
+        <com.codoon.clubcodoongps.widget.CalendarGroupView
+            android:id="@+id/calendar_gv"
+            android:layout_width="match_parent"
+            android:layout_height="100dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <EditText
+                android:id="@+id/voice_num"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:inputType="numberDecimal"/>
+            <Button
+                android:id="@+id/play_voice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="播报语音"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#30303A">
+            <com.codoon.clubcodoongps.widget.NewHistoryCountView
+                android:id="@+id/new_history_view"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#30303A">
+            <com.codoon.clubcodoongps.widget.NewPaceView
+                android:id="@+id/new_pace_view"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#30303A">
+            <com.codoon.clubcodoongps.widget.NewElevationView
+                android:id="@+id/new_elevation_view"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#30303A">
+            <com.codoon.clubcodoongps.widget.NewStepFreqView
+                android:id="@+id/new_stepfreq_view"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>
+

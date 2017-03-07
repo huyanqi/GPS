@@ -17,6 +17,15 @@ public class PaceChatBean {
 
     private String kmText;//中间穿插的tag,如:5公里 00:30:20、半程马拉松 01:20:33
 
+    public PaceChatBean(){}
+
+    public PaceChatBean(int kmNumber, long avg_pace_long, long duration, String kmText) {
+        this.kmNumber = kmNumber;
+        this.avg_pace_long = avg_pace_long;
+        this.duration = duration;
+        this.kmText = kmText;
+    }
+
     public int getKmNumber() {
         return kmNumber;
     }
